@@ -1,16 +1,51 @@
-# React + Vite
+# Movie Explorer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React web app that lets you search for movies and view details using the OMDB API.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Search movies by title
+- View movie details including poster, year, and plot
+- Responsive design
+- Handles missing or broken poster images
 
-## React Compiler
+## Installation
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/username/My-Project.git
+   Install dependencies:
+   ```
 
-## Expanding the ESLint configuration
+bash
+Copy code
+npm install
+Start the development server:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+bash
+Copy code
+npm start
+
+---
+
+### **6. Usage**
+
+```markdown
+## Usage
+
+- Enter a movie title in the search bar.
+- Click on a movie card to see details.
+- Pagination buttons let you browse multiple pages of results.
+```
+
+## Technologies
+
+- React
+- Tailwind CSS
+- OMDB API
+- JavaScript (ES6+)
+
+## Notes
+
+- Some movies may not have posters.
+- Requires an OMDB API key.
