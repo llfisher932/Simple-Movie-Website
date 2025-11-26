@@ -11,7 +11,13 @@ A React web app that lets you search for movies and view details using the OMDB 
 - Responsive design
 - Handles missing or broken poster images
 
----
+## Screenshots
+
+A full view of the website with movies loaded:
+![A full view of the website with movies loaded.](assets/movieDemo1.png)
+gi
+A view of the details page for a specific movie:
+![A view of the details page for a specific movie.](assets/movieDemo2.png)
 
 ## Installation
 
