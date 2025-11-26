@@ -27,9 +27,9 @@ A React web app that lets you search for movies and view details using the OMDB 
    ```
 3. Start the development server:
 
-```
+   ```
    npm start
-```
+   ```
 
 ---
 
