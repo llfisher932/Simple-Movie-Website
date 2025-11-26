@@ -17,15 +17,15 @@ A React web app that lets you search for movies and view details using the OMDB 
 
 1. Clone the repo:
 
-git clone https://github.com/username/My-Project.git
+   git clone https://github.com/username/My-Project.git
 
 2. Install dependencies:
 
-npm install
+   npm install
 
 3. Start the development server:
 
-npm start
+   npm start
 
 ---
 
