@@ -22,6 +22,7 @@ export default function LoginPage({ onLogin }) {
 
     if (res.ok) {
       onLogin(); // notify App.jsx that user is logged in
+      localStorage.setItem("userID", data.userID); //store the user logged in id
     } else {
       setError(data.error || "Login failed");
     }

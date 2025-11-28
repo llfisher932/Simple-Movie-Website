@@ -55,7 +55,28 @@ app.post("/login", async (req, res) => {
   // Save login session so we know were logged in now
   req.session.userId = user.id;
 
-  res.json({ success: true });
+  res.json({ success: true, userID: `${user.id}` });
+});
+
+//new review logic
+app.post("/addreview", async (req, res) => {
+  const { movieID, reviewText, reviewNumber } = req.body; //received from frontend
+  const userID = req.session.userId;
+  if (!userID) {
+    return res.status(400).json({ error: "Missing userID (user not logged in)" });
+  }
+
+  try {
+    const result = await pool.query(
+      "INSERT INTO reviews (user_id, movie_id, review_text, review_number) VALUES ($1, $2, $3, $4) returning *",
+      [userID, movieID, reviewText, reviewNumber]
+    );
+
+    res.json({ success: true, review: result.rows[0] });
+  } catch (err) {
+    console.error("Review insert error:", err);
+    res.status(500).json({ error: "Database error" });
+  }
 });
 
 //register logic

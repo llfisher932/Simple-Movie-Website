@@ -102,7 +102,7 @@ export default function MoviesPage({ onLogout }) {
       <div className="flex box-border">
         <div className="w-1/6"></div>
 
-        <div className="min-w-4xl max-w-4xl mx-auto cursor-pointer grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-1 box-border mb-15 p-4">
+        <div className="min-w-4xl max-w-5xl mx-auto cursor-pointer grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-1 box-border mb-15 p-4">
           {movies.map((movie) => (
             <MovieCard key={movie.imdbID} movie={movie} fetchMovieDetails={fetchMovieDetails} />
           ))}
