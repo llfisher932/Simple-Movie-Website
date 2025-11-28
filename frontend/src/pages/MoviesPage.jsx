@@ -33,7 +33,10 @@ export default function MoviesPage({ onLogout }) {
     }
   }, [displayedSearch, pageNumber]);
   async function handleLogout() {
-    const res = await fetch("http://localhost:5000/logout", { method: "POST", credentials: "include" });
+    const res = await fetch("http://localhost:5000/logout", {
+      method: "POST",
+      credentials: "include",
+    });
 
     onLogout();
   }
@@ -48,11 +51,11 @@ export default function MoviesPage({ onLogout }) {
       const data = await response.json();
       console.log(data);
       if (data.Response === "True") {
-        const uniqueMovies = Array.from(new Map(data.Search.map((movie) => [movie.imdbID, movie])).values()).sort(
-          (a, b) => {
-            return b.Year - a.Year; //sort by release year (most recent first)
-          }
-        );
+        const uniqueMovies = Array.from(
+          new Map(data.Search.map((movie) => [movie.imdbID, movie])).values()
+        ).sort((a, b) => {
+          return b.Year - a.Year; //sort by release year (most recent first)
+        });
         //get array of all data from API. turn it into a map based on ID (each ID can only be stored once)
         //storing each id means duplicated id's (duped movies) won't show up at all. Then turn that map back into an array based on just the values (array of all unique movies).
         setMovies(uniqueMovies);
@@ -64,7 +67,9 @@ export default function MoviesPage({ onLogout }) {
     }
   }
   async function fetchMovieDetails(imdbID) {
-    const res = await fetch(`https://www.omdbapi.com/?i=${imdbID}&apikey=${API_KEY}`);
+    const res = await fetch(
+      `https://www.omdbapi.com/?i=${imdbID}&apikey=${API_KEY}`
+    );
     const data = await res.json();
     setSelectedMovie(data);
     console.log(data);
@@ -74,11 +79,16 @@ export default function MoviesPage({ onLogout }) {
     <>
       <div className="bg-amber-600 flex items-center justify-end w-full p-4">
         <div className="flex-1">
-          <button className="cursor-pointer bg-white p-2 rounded-lg" onClick={handleLogout}>
+          <button
+            className="cursor-pointer bg-white p-2 rounded-lg"
+            onClick={handleLogout}
+          >
             Logout
           </button>
         </div>
-        <h1 className="flex-1 text-center text-white font-bold text-3xl">Simple Movie Site</h1>
+        <h1 className="flex-1 text-center text-white font-bold text-3xl">
+          Simple Movie Site
+        </h1>
         <div className="flex-1 flex gap-4 justify-end">
           <input
             id="searchBar"
@@ -91,35 +101,47 @@ export default function MoviesPage({ onLogout }) {
             className="cursor-pointer flex justify-center items-center text-center bg-slate-200 p-2 rounded-md"
             onClick={() => {
               searchButton(searchText);
-            }}>
+            }}
+          >
             Search
           </button>
         </div>
       </div>
       <div className="flex box-border">
-        <div className="w-1/4"></div>
+        <div className="w-1/5"></div>
 
         <div className="cursor-pointer grid grid-cols-3 gap-4 p-4 flex-1 box-border mb-15">
           {movies.map((movie) => (
-            <MovieCard key={movie.imdbID} movie={movie} fetchMovieDetails={fetchMovieDetails} />
+            <MovieCard
+              key={movie.imdbID}
+              movie={movie}
+              fetchMovieDetails={fetchMovieDetails}
+            />
           ))}
         </div>
 
-        <div className="w-1/4"></div>
-        {selectedMovie && <MovieModal selectedMovie={selectedMovie} setSelectedMovie={setSelectedMovie} />}
+        <div className="w-1/5"></div>
+        {selectedMovie && (
+          <MovieModal
+            selectedMovie={selectedMovie}
+            setSelectedMovie={setSelectedMovie}
+          />
+        )}
       </div>
 
       <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 flex gap-4 z-50 bg-amber-700 w-full justify-center p-2">
         <button
           type="button"
           onClick={pageDecrease}
-          className="bg-amber-800 cursor-pointer  text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center ">
+          className="bg-amber-800 cursor-pointer  text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center "
+        >
           Previous Page
         </button>
         <button
           type="button"
           onClick={pageIncrease}
-          className="bg-amber-800 cursor-pointer text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center ">
+          className="bg-amber-800 cursor-pointer text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center "
+        >
           Next Page
         </button>
       </div>
