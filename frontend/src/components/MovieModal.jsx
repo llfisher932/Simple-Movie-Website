@@ -23,6 +23,10 @@ export default function MovieModal({ selectedMovie, setSelectedMovie }) {
     }
 
     console.log("Review submitted!");
+
+    //review form claer
+    setReviewText("");
+    setReviewNumber(0);
   }
 
   if (!selectedMovie) {
