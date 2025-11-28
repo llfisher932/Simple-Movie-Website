@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import "./App.css";
-import MovieModal from "./components/MovieModal.jsx";
-import MovieCard from "./components/MovieCard.jsx";
+import "../App.css";
+import MovieModal from "../components/MovieModal.jsx";
+import MovieCard from "../components/MovieCard.jsx";
 
-function App() {
+export default function MoviesPage({ onLogout }) {
   const API_KEY = import.meta.env.VITE_OMDB_API_KEY;
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
@@ -32,7 +32,11 @@ function App() {
       fetchMovies(displayedSearch, pageNumber);
     }
   }, [displayedSearch, pageNumber]);
+  async function handleLogout() {
+    const res = await fetch("http://localhost:5000/logout", { method: "POST", credentials: "include" });
 
+    onLogout();
+  }
   async function fetchMovies(query, pageNumber) {
     try {
       const url = `https://www.omdbapi.com/?s=${query}&apikey=${API_KEY}&page=${pageNumber}`;
@@ -69,7 +73,11 @@ function App() {
   return (
     <>
       <div className="bg-amber-600 flex items-center justify-end w-full p-4">
-        <div className="flex-1"></div>
+        <div className="flex-1">
+          <button className="cursor-pointer bg-white p-2 rounded-lg" onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
         <h1 className="flex-1 text-center text-white font-bold text-3xl">Simple Movie Site</h1>
         <div className="flex-1 flex gap-4 justify-end">
           <input
@@ -118,5 +126,3 @@ function App() {
     </>
   );
 }
-
-export default App;
