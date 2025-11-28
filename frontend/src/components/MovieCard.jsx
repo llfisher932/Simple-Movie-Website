@@ -10,19 +10,13 @@ export default function MovieCard({ movie, fetchMovieDetails }) {
       onClick={() => {
         fetchMovieDetails(movie.imdbID);
       }}
-      className=" bg-gray-800 p-3 rounded-lg text-white text-center flex flex-col box-border"
-    >
+      className="w-full bg-gray-800 p-3 rounded-lg text-white text-center flex flex-col box-border max-w-sm">
       {showPlaceholder ? (
         <div className="bg-gray-600 text-white flex items-center justify-center rounded mb-2 h-100">
           No Poster Available
         </div>
       ) : (
-        <img
-          src={movie.Poster}
-          alt={movie.Title}
-          onError={() => setImgError(true)}
-          className="rounded mb-2 h-100"
-        />
+        <img src={movie.Poster} alt={movie.Title} onError={() => setImgError(true)} className="rounded mb-2 h-100 " />
       )}
 
       <h2 className="font-bold">{movie.Title}</h2>
