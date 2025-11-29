@@ -22,7 +22,7 @@ A React + Express application where users can browse movies, submit reviews with
 
 ### A view of the details page for a specific movie:
 
-![A view of the details page for a specific movie.](./assets/movieDemo4.png)
+![A view of the details page for a specific movie.](./assets/movideDemo4.png)
 
 ## Installation
 
