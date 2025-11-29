@@ -17,6 +17,7 @@ export default function MovieCard({ movie, fetchMovieDetails }) {
         </div>
       ) : (
         <img src={movie.Poster} alt={movie.Title} onError={() => setImgError(true)} className="rounded mb-2 h-100 " />
+        //logic above is to make sure that posters display properly. If no poster is found or loads, show a No Poster Available "poster" instead
       )}
 
       <h2 className="font-bold">{movie.Title}</h2>

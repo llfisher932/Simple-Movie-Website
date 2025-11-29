@@ -106,16 +106,21 @@ export default function MovieModal({ selectedMovie, setSelectedMovie }) {
           <div className="bg-gray-700 p-4 rounded-lg ">
             <h2 className="text-xl font-semibold mb-2">Reviews</h2>
             <div className="flex flex-col gap-3">
-              {reviews.length === 0 && <p>No reviews yet</p>}
-              {reviews.map((review) => (
-                <MovieReview
-                  key={review.review_id}
-                  username={review.username}
-                  number={review.review_number}
-                  text={review.review_text}
-                />
-              ))}
-              {/* Add more reviews dynamically */}
+              {
+                //in case there are no reviews
+                reviews.length === 0 && <p>No reviews yet</p>
+              }
+              {
+                //if there are no reviews, this will do nothing. But, otherwise, show all reviews as MovieReview component from backend Query (only grabs last 4 at most)
+                reviews.map((review) => (
+                  <MovieReview
+                    key={review.review_id}
+                    username={review.username}
+                    number={review.review_number}
+                    text={review.review_text}
+                  />
+                ))
+              }
             </div>
           </div>
           <div className="mt-4 bg-gray-700 p-4 rounded-lg">
@@ -123,6 +128,7 @@ export default function MovieModal({ selectedMovie, setSelectedMovie }) {
               <div className="flex flex-row">
                 <div className="font-semibold text-xl">Leave a review!</div>
                 <div className="flex ml-2">
+                  {/* allows user to click stars to get a review number */}
                   {[1, 2, 3, 4, 5].map((star) => (
                     <svg
                       key={star}
@@ -153,11 +159,3 @@ export default function MovieModal({ selectedMovie, setSelectedMovie }) {
     </div>
   );
 }
-
-/*
-
-        <div className="absolute top-[25%] right-[20%]">
-          <div className="text-xl font-bold">Leave a review!</div>
-          <textarea className="resize" />
-        </div>
-        */

@@ -7,6 +7,7 @@ export default function MovieReview({ username, number, text }) {
         <h2 className="font-bold">{username}</h2>
 
         <div className="flex ml-2">
+          {/* uses prety much same logic as stars to leave review, but just rended filled stars based on database number, not click */}
           {[1, 2, 3, 4, 5].map((star) => (
             <svg
               key={star}

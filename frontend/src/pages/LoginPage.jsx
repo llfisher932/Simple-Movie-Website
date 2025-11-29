@@ -15,14 +15,17 @@ export default function LoginPage({ onLogin }) {
       headers: {
         "Content-Type": "application/json", //tell backend this is json data
       },
-      body: JSON.stringify({ email, password }), //turn object into JSON string
+      body: JSON.stringify({ email, password }), //send email + password to the backend to check for login
     });
 
+    //did login work?
     const data = await res.json();
 
+    //if login worked:
     if (res.ok) {
       onLogin(); // notify App.jsx that user is logged in
       localStorage.setItem("userID", data.userID); //store the user logged in id
+      //if login didnt work:
     } else {
       setError(data.error || "Login failed");
     }
@@ -35,6 +38,7 @@ export default function LoginPage({ onLogin }) {
 
         {error && <p className="text-red-400 mb-2">{error}</p>}
 
+        {/* email form */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <input
             type="email"
@@ -45,6 +49,7 @@ export default function LoginPage({ onLogin }) {
             required
           />
 
+          {/* password form */}
           <input
             type="password"
             placeholder="Password"

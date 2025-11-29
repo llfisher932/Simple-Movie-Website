@@ -76,7 +76,7 @@ app.get("/getreviews/:movieID", async (req, res) => {
 //new review logic
 app.post("/addreview", async (req, res) => {
   const { movieID, reviewText, reviewNumber } = req.body; //received from frontend
-  const userID = req.session.userId;
+  const userID = req.session.userId; //express session stores the userID the whole time they are logged in.
   if (!userID) {
     return res.status(400).json({ error: "Missing userID (user not logged in)" });
   }
@@ -98,26 +98,32 @@ app.post("/addreview", async (req, res) => {
 app.post("/register", async (req, res) => {
   const { username, email, password } = req.body;
 
+  //check for any fields that didnt get sent
   if (!username || !email || !password) return res.status(400).json({ error: "All fields required" });
 
   try {
+    //hashed password (12 is more secure but slower)
     const hashed = await bcrypt.hash(password, 10);
 
+    //add this new user to the database
     const result = await pool.query(
       "INSERT INTO users (username, email, password_hash) VALUES ($1, $2, $3) RETURNING id",
       [username, email, hashed]
     );
 
+    //set the current session userID to their newly assigned userID from the database (uses SERIAL)
     req.session.userId = result.rows[0].id;
+    //return message that it was successful
     res.json({ message: "Registered successfully" });
   } catch (err) {
+    //not a new user
     if (err.code === "23505") return res.status(400).json({ error: "User already exists" });
-
-    res.status(500).json({ error: "Server error" });
+    //some other error
+    return res.status(500).json({ error: "Server error" });
   }
 });
 
-// logou logic
+// logout logic
 app.post("/logout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {
