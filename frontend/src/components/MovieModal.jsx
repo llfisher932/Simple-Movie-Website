@@ -3,7 +3,7 @@ import MovieReview from "./MovieReview";
 
 export default function MovieModal({ selectedMovie, setSelectedMovie }) {
   const [reviewText, setReviewText] = useState("");
-  const [reviewNumber, setReviewNumber] = useState(0);
+  const [reviewNumber, setReviewNumber] = useState(1);
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
