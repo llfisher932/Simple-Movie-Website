@@ -1,8 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import MovieReview from "./MovieReview";
 
 export default function MovieModal({ selectedMovie, setSelectedMovie }) {
   const [reviewText, setReviewText] = useState("");
   const [reviewNumber, setReviewNumber] = useState(0);
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    if (!selectedMovie) return;
+
+    async function loadReviews() {
+      const movieID = selectedMovie.imdbID;
+      try {
+        const res = await fetch(`http://localhost:5000/getreviews/${movieID}`, {
+          //get reviews based on movieID, not sensitive info or modifying so GET works
+          credentials: "include",
+        });
+        const data = await res.json();
+        if (res.ok) setReviews(data.reviews); // store reviews in state
+        else console.error(data.error);
+      } catch (err) {
+        console.error("Failed to fetch reviews:", err);
+      }
+    }
+
+    loadReviews();
+  }, [selectedMovie]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -24,9 +47,30 @@ export default function MovieModal({ selectedMovie, setSelectedMovie }) {
 
     console.log("Review submitted!");
 
-    //review form claer
+    //review form clear
+    setReviews((prev) => [
+      { review_id: data.review.review_id, username: "You", review_number: reviewNumber, review_text: reviewText },
+      ...prev,
+    ]);
     setReviewText("");
     setReviewNumber(0);
+  }
+
+  async function getReviews() {
+    const movieID = selectedMovie.imdbID;
+
+    const res = await fetch(`http://localhost:5000/getreviews/${movieID}`, {
+      credentials: "include",
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.error(data.error);
+      return;
+    }
+
+    return data.reviews;
   }
 
   if (!selectedMovie) {
@@ -61,32 +105,47 @@ export default function MovieModal({ selectedMovie, setSelectedMovie }) {
         <div className="flex-1 overflow-y-auto max-h-[80vh]">
           <div className="bg-gray-700 p-4 rounded-lg ">
             <h2 className="text-xl font-semibold mb-2">Reviews</h2>
-            <p className="text-sm mb-2">"Amazing movie, loved the plot!"</p>
-            <p className="text-sm mb-2">"Great cinematography, worth watching."</p>
-            <p className="text-sm mb-2">"The ending was unexpected and thrilling."</p>
-            {/* Add more reviews dynamically */}
+            <div className="flex flex-col gap-3">
+              {reviews.length === 0 && <p>No reviews yet</p>}
+              {reviews.map((review) => (
+                <MovieReview
+                  key={review.review_id}
+                  username={review.username}
+                  number={review.review_number}
+                  text={review.review_text}
+                />
+              ))}
+              {/* Add more reviews dynamically */}
+            </div>
           </div>
           <div className="mt-4 bg-gray-700 p-4 rounded-lg">
             <form onSubmit={handleSubmit}>
               <div className="flex flex-row">
                 <div className="font-semibold text-xl">Leave a review!</div>
-                <input
-                  type="number"
-                  min="1"
-                  max="10"
-                  className="ml-4 w-16 text-black rounded"
-                  value={reviewNumber}
-                  onChange={(e) => setReviewNumber(e.target.value)}
-                />
+                <div className="flex ml-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <svg
+                      key={star}
+                      onClick={() => setReviewNumber(star)}
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill={star <= reviewNumber ? "yellow" : "gray"}
+                      className="w-6 h-6 cursor-pointer hover:scale-110 transition-transform">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.947a1 1 0 00.95.69h4.15c.969 0 1.371 1.24.588 1.81l-3.36 2.44a1 1 0 00-.364 1.118l1.287 3.947c.3.921-.755 1.688-1.54 1.118l-3.36-2.44a1 1 0 00-1.175 0l-3.36 2.44c-.784.57-1.838-.197-1.539-1.118l1.286-3.947a1 1 0 00-.364-1.118L2.034 9.374c-.783-.57-.38-1.81.588-1.81h4.15a1 1 0 00.95-.69l1.287-3.947z" />
+                    </svg>
+                  ))}
+                </div>
               </div>
               <textarea
-                className="resize-none w-full h-40 p-1 rounded-lg mt-2"
+                className="resize-none w-full h-40 p-1 rounded-lg mt-2 border-2 border-gray-900"
                 maxLength={200}
                 value={reviewText}
                 onChange={(e) => setReviewText(e.target.value)}
                 placeholder="Type your review! Max 200 characters."
               />
-              <button type="submit">test</button>
+              <button className="cursor-pointer bg-amber-700 p-2 rounded-lg mt-1" type="submit">
+                Submit Review
+              </button>
             </form>
           </div>
         </div>

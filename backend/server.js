@@ -57,7 +57,22 @@ app.post("/login", async (req, res) => {
 
   res.json({ success: true, userID: `${user.id}` });
 });
+// get reviews (: means everytthing form that point on is the movieID I want)
+app.get("/getreviews/:movieID", async (req, res) => {
+  const { movieID } = req.params; //pull ID from URL
 
+  try {
+    const result = await pool.query(
+      "SELECT r.*, u.username FROM reviews r JOIN users u ON r.user_id = u.id WHERE r.movie_id = $1 ORDER BY r.created_at DESC LIMIT 4",
+      [movieID]
+    );
+
+    res.json({ reviews: result.rows });
+  } catch (err) {
+    console.error("Error fetching reviews:", err);
+    res.status(500).json({ error: "Database error" });
+  }
+});
 //new review logic
 app.post("/addreview", async (req, res) => {
   const { movieID, reviewText, reviewNumber } = req.body; //received from frontend
