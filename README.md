@@ -6,7 +6,7 @@ A React + Express application where users can browse movies, submit reviews with
 
 ## Features
 
-- Search and View movies using OMDB
+- Search and View movies using TMDB
 - User registration and login (with session authentication)
 - Submit movie reviews with star ratings (1-5 stars)
 - View the 4 most recent reviews for each movie
@@ -51,7 +51,7 @@ npm install
 
 ### Environment Variables:
 
-Rename .env.example files to .env and adjust the variables.
+Rename .env.example file to .env and adjust the variables.
 
 ### Database Setup:
 
@@ -115,7 +115,7 @@ npm run dev
 ## Notes
 
 - Some movies may not have posters.
-- Requires an OMDB API key.
+- Requires a TMDB API key.
 - Only shows last 4 reviews, but database stores all reviews.
 
 ## License
