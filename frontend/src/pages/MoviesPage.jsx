@@ -108,7 +108,7 @@ export default function MoviesPage({ onLogout }) {
       <div className="flex box-border">
         <div className="w-1/6"></div>
 
-        <div className="min-w-4xl max-w-5xl mx-auto cursor-pointer grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-1 box-border mb-15 p-4">
+        <div className="min-w-4xl max-w-5xl mx-auto cursor-pointer grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-1 box-border p-4">
           {movies.map((movie) => (
             <MovieCard key={movie.id} movie={movie} fetchMovieDetails={fetchMovieDetails} />
           ))}
@@ -117,20 +117,28 @@ export default function MoviesPage({ onLogout }) {
         <div className="w-1/6"></div>
         {selectedMovie && <MovieModal selectedMovie={selectedMovie} setSelectedMovie={setSelectedMovie} />}
       </div>
+      <div className="text-xs mb-14 text-center">
+        This website uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise approved by TMDB.
+      </div>
 
-      <div className="fixed bottom-0 left-1/2 transform -translate-x-1/2 flex gap-4 z-50 bg-amber-700 w-full justify-center p-2">
-        <button
-          type="button"
-          onClick={pageDecrease}
-          className="bg-amber-800 cursor-pointer  text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center ">
-          Previous Page
-        </button>
-        <button
-          type="button"
-          onClick={pageIncrease}
-          className="bg-amber-800 cursor-pointer text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center ">
-          Next Page
-        </button>
+      <div className="flex-col fixed bottom-0 left-1/2 transform -translate-x-1/2 flex  z-50 bg-amber-700 w-full justify-center items-center p-2">
+        <div className="flex gap-4">
+          <button
+            type="button"
+            onClick={pageDecrease}
+            className="bg-amber-800 cursor-pointer  text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center ">
+            Previous Page
+          </button>
+          <button
+            type="button"
+            onClick={pageIncrease}
+            className="bg-amber-800 cursor-pointer text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center ">
+            Next Page
+          </button>
+        </div>
+      </div>
+      <div className="fixed bottom-0 right-0 text-white z-100">
+        <img src="../../assets/tmdb.svg" alt="TMDB image" className="w-32 p-4" />
       </div>
     </>
   );
