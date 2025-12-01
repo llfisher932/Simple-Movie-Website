@@ -32,6 +32,7 @@ export default function MoviesPage({ onLogout }) {
       fetchMovies(displayedSearch, pageNumber);
     }
   }, [displayedSearch, pageNumber]);
+
   async function handleLogout() {
     const res = await fetch("http://localhost:5000/logout", {
       method: "POST",
@@ -40,37 +41,43 @@ export default function MoviesPage({ onLogout }) {
 
     onLogout();
   }
+
   async function fetchMovies(query, pageNumber) {
     try {
-      const url = `https://www.omdbapi.com/?s=${query}&apikey=${API_KEY}&page=${pageNumber}`;
+      const res = await fetch("http://localhost:5000/getMovies", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ query: `${query}`, page: `${pageNumber}` }),
+      });
 
-      const response = await fetch(url);
+      if (!res.ok) throw new Error("Response Invalid.");
 
-      if (!response.ok) throw new Error("Response Invalid.");
-
-      const data = await response.json();
+      const data = await res.json();
       console.log(data);
-      if (data.Response === "True") {
-        const uniqueMovies = Array.from(new Map(data.Search.map((movie) => [movie.imdbID, movie])).values()).sort(
-          (a, b) => {
-            return b.Year - a.Year; //sort by release year (most recent first)
-          }
-        );
-        //get array of all data from API. turn it into a map based on ID (each ID can only be stored once)
-        //storing each id means duplicated id's (duped movies) won't show up at all. Then turn that map back into an array based on just the values (array of all unique movies).
-        setMovies(uniqueMovies);
-      } else {
-        throw new Error(data.Error);
-      }
+
+      setMovies(data.movies);
     } catch (err) {
       console.error("Error Fetching Movies: ", err);
     }
   }
-  async function fetchMovieDetails(imdbID) {
-    const res = await fetch(`https://www.omdbapi.com/?i=${imdbID}&apikey=${API_KEY}`);
+  async function fetchMovieDetails(id) {
+    const res = await fetch("http://localhost:5000/getMovieDetails", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: `${id}` }),
+    });
+
+    if (!res.ok) throw new Error("Response Invalid.");
+
     const data = await res.json();
-    setSelectedMovie(data);
-    console.log(data);
+
+    setSelectedMovie(data.movie);
   }
 
   return (
@@ -104,7 +111,7 @@ export default function MoviesPage({ onLogout }) {
 
         <div className="min-w-4xl max-w-5xl mx-auto cursor-pointer grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-1 box-border mb-15 p-4">
           {movies.map((movie) => (
-            <MovieCard key={movie.imdbID} movie={movie} fetchMovieDetails={fetchMovieDetails} />
+            <MovieCard key={movie.id} movie={movie} fetchMovieDetails={fetchMovieDetails} />
           ))}
         </div>
 

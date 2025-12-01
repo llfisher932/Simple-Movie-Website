@@ -5,12 +5,15 @@ export default function MovieModal({ selectedMovie, setSelectedMovie }) {
   const [reviewText, setReviewText] = useState("");
   const [reviewNumber, setReviewNumber] = useState(1);
   const [reviews, setReviews] = useState([]);
+  const [imgError, setImgError] = useState(false);
+  const showPlaceholder = selectedMovie.poster_path === "N/A" || imgError;
 
   useEffect(() => {
     if (!selectedMovie) return;
 
     async function loadReviews() {
-      const movieID = selectedMovie.imdbID;
+      const movieID = selectedMovie.id;
+      console.log(selectedMovie);
       try {
         const res = await fetch(`http://localhost:5000/getreviews/${movieID}`, {
           //get reviews based on movieID, not sensitive info or modifying so GET works
@@ -29,7 +32,7 @@ export default function MovieModal({ selectedMovie, setSelectedMovie }) {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const movieID = selectedMovie.imdbID;
+    const movieID = selectedMovie.id;
 
     const res = await fetch("http://localhost:5000/addreview", {
       method: "POST",
@@ -57,7 +60,7 @@ export default function MovieModal({ selectedMovie, setSelectedMovie }) {
   }
 
   async function getReviews() {
-    const movieID = selectedMovie.imdbID;
+    const movieID = selectedMovie.id;
 
     const res = await fetch(`http://localhost:5000/getreviews/${movieID}`, {
       credentials: "include",
@@ -89,16 +92,35 @@ export default function MovieModal({ selectedMovie, setSelectedMovie }) {
 
         {/* Left side: Movie info */}
         <div className="flex-1">
-          <h1 className="text-2xl font-bold mb-2">{selectedMovie.Title}</h1>
-          <p className="mb-2">{selectedMovie.Plot}</p>
-          <p className="mb-1">Year: {selectedMovie.Year}</p>
-          <p className="mb-1">Genre: {selectedMovie.Genre}</p>
-          <p className="mb-1">Director: {selectedMovie.Director}</p>
-          <img
-            src={selectedMovie.Poster !== "N/A" ? selectedMovie.Poster : ""}
-            alt={selectedMovie.Title}
-            className="mt-4 rounded max-h-[40vh] object-contain"
-          />
+          <h1 className="text-2xl font-bold mb-2">{selectedMovie.title}</h1>
+          <p className="mb-2">{selectedMovie.overview}</p>
+          <p className="mb-1">Year: {selectedMovie.release_date}</p>
+          <p className="mb-1">
+            Genres:
+            <div className="flex gap-2">
+              {selectedMovie.genres.map((item) => {
+                return (
+                  <div key={item.id} className="p-2 bg-gray-900">
+                    {item.name}
+                  </div>
+                );
+              })}
+            </div>
+          </p>
+          <p className="mb-1">Studio: {selectedMovie.production_companies[0].name}</p>
+          {showPlaceholder ? (
+            <div className="bg-gray-600 text-white flex items-center justify-center rounded mb-2 h-100">
+              No Poster Available
+            </div>
+          ) : (
+            <img
+              src={`https://image.tmdb.org/t/p/w500/${selectedMovie.poster_path}`}
+              alt={selectedMovie.title}
+              onError={() => setImgError(true)}
+              className="rounded mb-2 h-100 "
+            />
+            //logic above is to make sure that posters display properly. If no poster is found or loads, show a No Poster Available "poster" instead
+          )}
         </div>
 
         {/* Right side: Reviews */}

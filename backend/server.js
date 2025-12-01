@@ -9,6 +9,7 @@ import session from "express-session";
 dotenv.config();
 
 const app = express(); //creates express app instance and assigns it to app.
+const TMDB_API_KEY = process.env.TMDB_API_KEY;
 
 app.use(cors({ origin: "http://localhost:5173", credentials: true })); //need to lock down before upload, fine for now.
 app.use(express.json());
@@ -133,6 +134,68 @@ app.post("/logout", (req, res) => {
     res.clearCookie("connect.sid"); // default session cookie name
     res.json({ message: "Logged out" });
   });
+});
+
+app.post("/getMovies", async (req, res) => {
+  const { query, page } = req.body;
+
+  //check for any fields that didnt get sent
+  if (!query || !page) return res.status(400).json({ error: "All fields required" });
+
+  try {
+    //add this new user to the database
+    const url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
+      query
+    )}&include_adult=false&language=en-US&page=${page}`;
+    const result = await fetch(url, {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        Authorization: `Bearer ${TMDB_API_KEY}`,
+      },
+    });
+
+    if (!result.ok) {
+      return res.status(500).json({ error: "TMDB API failed" });
+    }
+
+    const data = await result.json();
+
+    res.json({ movies: data.results });
+  } catch (err) {
+    //some error
+    return res.status(500).json({ error: "Server error" });
+  }
+});
+
+app.post("/getMovieDetails", async (req, res) => {
+  const { id } = req.body;
+
+  //check for any fields that didnt get sent
+  if (!id) return res.status(400).json({ error: "All fields required" });
+
+  try {
+    //add this new user to the database
+    const url = `https://api.themoviedb.org/3/movie/${id}`;
+    const result = await fetch(url, {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        Authorization: `Bearer ${TMDB_API_KEY}`,
+      },
+    });
+
+    if (!result.ok) {
+      return res.status(500).json({ error: "TMDB API failed" });
+    }
+
+    const data = await result.json();
+
+    res.json({ movie: data });
+  } catch (err) {
+    //some error
+    return res.status(500).json({ error: "Server error" });
+  }
 });
 
 // start server
