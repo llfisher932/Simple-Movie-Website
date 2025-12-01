@@ -13,7 +13,6 @@ export default function MovieModal({ selectedMovie, setSelectedMovie }) {
 
     async function loadReviews() {
       const movieID = selectedMovie.id;
-      console.log(selectedMovie);
       try {
         const res = await fetch(`http://localhost:5000/getreviews/${movieID}`, {
           //get reviews based on movieID, not sensitive info or modifying so GET works
@@ -47,8 +46,6 @@ export default function MovieModal({ selectedMovie, setSelectedMovie }) {
       console.error(data.error);
       return;
     }
-
-    console.log("Review submitted!");
 
     //review form clear
     setReviews((prev) => [
@@ -92,22 +89,6 @@ export default function MovieModal({ selectedMovie, setSelectedMovie }) {
 
         {/* Left side: Movie info */}
         <div className="flex-1">
-          <h1 className="text-2xl font-bold mb-2">{selectedMovie.title}</h1>
-          <p className="mb-2">{selectedMovie.overview}</p>
-          <p className="mb-1">Year: {selectedMovie.release_date}</p>
-          <p className="mb-1">
-            Genres:
-            <div className="flex gap-2">
-              {selectedMovie.genres.map((item) => {
-                return (
-                  <div key={item.id} className="p-2 bg-gray-900">
-                    {item.name}
-                  </div>
-                );
-              })}
-            </div>
-          </p>
-          <p className="mb-1">Studio: {selectedMovie.production_companies[0].name}</p>
           {showPlaceholder ? (
             <div className="bg-gray-600 text-white flex items-center justify-center rounded mb-2 h-100">
               No Poster Available
@@ -121,6 +102,22 @@ export default function MovieModal({ selectedMovie, setSelectedMovie }) {
             />
             //logic above is to make sure that posters display properly. If no poster is found or loads, show a No Poster Available "poster" instead
           )}
+          <h1 className="text-2xl font-bold mb-2">{selectedMovie.title}</h1>
+          <p className="mb-2">{selectedMovie.overview}</p>
+          <p className="mb-1">Release Date: {selectedMovie.release_date}</p>
+          <p className="mb-1">
+            Genres:
+            <div className="flex gap-2">
+              {selectedMovie.genres.map((item) => {
+                return (
+                  <div key={item.id} className="p-2 bg-gray-900">
+                    {item.name}
+                  </div>
+                );
+              })}
+            </div>
+          </p>
+          <p className="mb-1">Studio: {selectedMovie.production_companies[0].name}</p>
         </div>
 
         {/* Right side: Reviews */}

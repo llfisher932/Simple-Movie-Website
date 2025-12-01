@@ -56,7 +56,6 @@ export default function MoviesPage({ onLogout }) {
       if (!res.ok) throw new Error("Response Invalid.");
 
       const data = await res.json();
-      console.log(data);
 
       setMovies(data.movies);
     } catch (err) {

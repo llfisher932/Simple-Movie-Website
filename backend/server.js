@@ -2,7 +2,6 @@ import express from "express"; //a minimal, flexible Node.js web framework for b
 import cors from "cors"; //adds Cross-Origin Resource Sharing headers so browsers will allow requests from other origins (e.g., your React app at http://localhost:3000 calling http://localhost:5000).
 import { pool } from "./db.js"; //an instance of pg.Pool (Postgres connection pool) created using the pg package, used to run database queries.
 import bcrypt from "bcrypt"; //for registering users (hashing passwords) and for verifying passwords at login (comparing hashes).
-import jwt from "jsonwebtoken"; //when a user logs in, you generate a signed token jwt.sign(payload, secret, options) and send it to the client; client includes it in future requests (Authorization: Bearer <token>).
 import dotenv from "dotenv"; //.env variables loaded
 import session from "express-session";
 
@@ -143,7 +142,6 @@ app.post("/getMovies", async (req, res) => {
   if (!query || !page) return res.status(400).json({ error: "All fields required" });
 
   try {
-    //add this new user to the database
     const url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
       query
     )}&include_adult=false&language=en-US&page=${page}`;
@@ -161,7 +159,11 @@ app.post("/getMovies", async (req, res) => {
 
     const data = await result.json();
 
-    res.json({ movies: data.results });
+    res.json({
+      movies: data.results.sort((a, b) => {
+        return b.popularity - a.popularity;
+      }),
+    });
   } catch (err) {
     //some error
     return res.status(500).json({ error: "Server error" });
@@ -175,7 +177,6 @@ app.post("/getMovieDetails", async (req, res) => {
   if (!id) return res.status(400).json({ error: "All fields required" });
 
   try {
-    //add this new user to the database
     const url = `https://api.themoviedb.org/3/movie/${id}`;
     const result = await fetch(url, {
       method: "GET",
