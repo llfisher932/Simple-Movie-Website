@@ -178,7 +178,7 @@ export default function MovieModal({ selectedMovie, setSelectedMovie }) {
                 })}
               </div>
             </h2>
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 overflow-y-scroll h-90 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {
                 //in case there are no reviews
                 reviews.length === 0 && <p>No reviews yet</p>

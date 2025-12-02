@@ -18,11 +18,11 @@ A React + Express application where users can browse movies, submit reviews with
 
 ### A full view of the website with movies loaded:
 
-![A full view of the website with movies loaded.](./assets/moviedemo6.png)
+![A full view of the website with movies loaded.](./assets/moviedemo8.png)
 
 ### A view of the details page for a specific movie:
 
-![A view of the details page for a specific movie.](./assets/moviedemo5.png)
+![A view of the details page for a specific movie.](./assets/moviedemo7.png)
 
 ## Installation
 

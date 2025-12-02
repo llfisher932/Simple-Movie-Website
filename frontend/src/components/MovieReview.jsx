@@ -20,7 +20,7 @@ export default function MovieReview({ username, number, text }) {
           ))}
         </div>
       </div>
-      <p className="text-wrap break-words">{text}</p>
+      <p className="text-wrap wrap-break-word">{text}</p>
     </div>
   );
 }
