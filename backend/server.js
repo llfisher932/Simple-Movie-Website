@@ -63,7 +63,7 @@ app.get("/getreviews/:movieID", async (req, res) => {
 
   try {
     const result = await pool.query(
-      "SELECT r.*, u.username FROM reviews r JOIN users u ON r.user_id = u.id WHERE r.movie_id = $1 ORDER BY r.created_at DESC LIMIT 4",
+      "SELECT r.*, u.username FROM reviews r JOIN users u ON r.user_id = u.id WHERE r.movie_id = $1 ORDER BY r.created_at DESC",
       [movieID]
     );
 
@@ -160,9 +160,17 @@ app.post("/getMovies", async (req, res) => {
     const data = await result.json();
 
     res.json({
-      movies: data.results.sort((a, b) => {
-        return b.popularity - a.popularity;
-      }),
+      movies: data.results
+        .filter((movie) => {
+          if (movie.release_date) {
+            return true;
+          } else {
+            return false;
+          }
+        })
+        .sort((a, b) => {
+          return b.popularity - a.popularity;
+        }),
     });
   } catch (err) {
     //some error

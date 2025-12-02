@@ -6,10 +6,39 @@ export default function MovieModal({ selectedMovie, setSelectedMovie }) {
   const [reviewNumber, setReviewNumber] = useState(1);
   const [reviews, setReviews] = useState([]);
   const [imgError, setImgError] = useState(false);
+  const [starRating, setStarRating] = useState(0);
   const showPlaceholder = selectedMovie.poster_path === "N/A" || imgError;
 
   useEffect(() => {
     if (!selectedMovie) return;
+
+    async function loadStars() {
+      const movieID = selectedMovie.id;
+      try {
+        const res = await fetch(`http://localhost:5000/getreviews/${movieID}`, {
+          //get reviews based on movieID, not sensitive info or modifying so GET works
+          credentials: "include",
+        });
+        const data = await res.json();
+        console.log("reviews =", data.reviews);
+        if (res.ok) {
+          let sum = 0;
+          let counter = 0;
+          for (let review of data.reviews) {
+            sum += review.review_number;
+            counter++;
+          }
+
+          const avg = counter > 0 ? sum / counter : 0;
+          setStarRating(avg);
+          console.log(starRating);
+        } else console.error(data.error);
+      } catch (err) {
+        console.error("Failed to fetch reviews:", err);
+      }
+    }
+
+    loadStars();
 
     async function loadReviews() {
       const movieID = selectedMovie.id;
@@ -53,7 +82,7 @@ export default function MovieModal({ selectedMovie, setSelectedMovie }) {
       ...prev,
     ]);
     setReviewText("");
-    setReviewNumber(0);
+    setReviewNumber(1);
   }
 
   async function getReviews() {
@@ -123,7 +152,32 @@ export default function MovieModal({ selectedMovie, setSelectedMovie }) {
         {/* Right side: Reviews */}
         <div className="flex-1 overflow-y-auto max-h-[80vh]">
           <div className="bg-gray-700 p-4 rounded-lg ">
-            <h2 className="text-xl font-semibold mb-2">Reviews</h2>
+            <h2 className="text-xl font-semibold mb-2 flex flex-row">
+              Reviews
+              <div className="flex ml-2 justify-center">
+                {[1, 2, 3, 4, 5].map((star) => {
+                  const fillLevel = Math.min(Math.max(starRating - (star - 1), 0), 1);
+                  // fillLevel = 0 to 1 (0%, 50%, 100%)
+                  return (
+                    <div key={star} className="relative w-6 h-6 mr-1">
+                      {/* Empty outline */}
+                      <svg className="absolute top-0 left-0 w-6 h-6" viewBox="0 0 20 20" fill="gray">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.947a1 1 0 00.95.69h4.15c.969 0 1.371 1.24.588 1.81l-3.36 2.44a1 1 0 00-.364 1.118l1.287 3.947c.3.921-.755 1.688-1.54 1.118l-3.36-2.44a1 1 0 00-1.175 0l-3.36 2.44c-.784.57-1.838-.197-1.539-1.118l1.286-3.947a1 1 0 00-.364-1.118L2.034 9.374c-.783-.57-.38-1.81.588-1.81h4.15a1 1 0 00.95-.69l1.287-3.947z" />
+                      </svg>
+
+                      {/* Filled star clip */}
+                      <svg
+                        className="absolute top-0 left-0 w-6 h-6"
+                        viewBox="0 0 20 20"
+                        fill="yellow"
+                        style={{ clipPath: `inset(0 ${100 - fillLevel * 100}% 0 0)` }}>
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.947a1 1 0 00.95.69h4.15c.969 0 1.371 1.24.588 1.81l-3.36 2.44a1 1 0 00-.364 1.118l1.287 3.947c.3.921-.755 1.688-1.54 1.118l-3.36-2.44a1 1 0 00-1.175 0l-3.36 2.44c-.784-.57-1.838-.197-1.539-1.118l1.286-3.947a1 1 0 00-.364-1.118L2.034 9.374c-.783-.57-.38-1.81.588-1.81h4.15a1 1 0 00.95-.69l1.287-3.947z" />
+                      </svg>
+                    </div>
+                  );
+                })}
+              </div>
+            </h2>
             <div className="flex flex-col gap-3">
               {
                 //in case there are no reviews
