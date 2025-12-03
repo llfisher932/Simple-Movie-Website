@@ -5,11 +5,14 @@ import MovieCard from "../components/MovieCard.jsx";
 
 export default function MoviesPage({ onLogout }) {
   const API_KEY = import.meta.env.VITE_OMDB_API_KEY;
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState();
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
   const [displayedSearch, setDisplayedSearch] = useState(null);
   const [searchText, setSearchText] = useState("");
+  const [popButtonAsc, setPopButtonAsc] = useState(false);
+  const [dateButtonAsc, setDateButtonAsc] = useState(false);
+  const [activeButton, setActiveButton] = useState("");
 
   function pageIncrease() {
     setPageNumber((prev) => prev + 1);
@@ -24,6 +27,53 @@ export default function MoviesPage({ onLogout }) {
   function searchButton(searchText) {
     setDisplayedSearch(searchText);
     setPageNumber(1);
+  }
+
+  function popButton() {
+    setActiveButton("popularity");
+    if (popButtonAsc) {
+      setMovies(
+        [...movies].sort((a, b) => {
+          return b.popularity - a.popularity;
+        })
+      );
+    } else {
+      setMovies(
+        [...movies].sort((a, b) => {
+          return a.popularity - b.popularity;
+        })
+      );
+    }
+    setPopButtonAsc(!popButtonAsc);
+  }
+
+  function releaseDateButton() {
+    setActiveButton("releaseDate");
+    if (dateButtonAsc) {
+      setMovies(
+        [...movies].sort((a, b) => {
+          const aMovieData = a.release_date.split("-");
+          const bMovieData = b.release_date.split("-");
+
+          let aRelease = aMovieData[0] * 365 + aMovieData[1] * 30 + aMovieData[2];
+          let bRelease = bMovieData[0] * 365 + bMovieData[1] * 30 + bMovieData[2];
+
+          return bRelease - aRelease;
+        })
+      );
+    } else {
+      setMovies(
+        [...movies].sort((a, b) => {
+          const aMovieData = a.release_date.split("-");
+          const bMovieData = b.release_date.split("-");
+
+          let aRelease = aMovieData[0] * 365 + aMovieData[1] * 30 + aMovieData[2];
+          let bRelease = bMovieData[0] * 365 + bMovieData[1] * 30 + bMovieData[2];
+          return aRelease - bRelease;
+        })
+      );
+    }
+    setDateButtonAsc(!dateButtonAsc);
   }
 
   useEffect(() => {
@@ -57,7 +107,11 @@ export default function MoviesPage({ onLogout }) {
 
       const data = await res.json();
 
-      setMovies(data.movies);
+      if (data.movies.length > 0) {
+        setMovies(data.movies);
+      } else {
+        setMovies();
+      }
     } catch (err) {
       console.error("Error Fetching Movies: ", err);
     }
@@ -105,13 +159,58 @@ export default function MoviesPage({ onLogout }) {
           </button>
         </div>
       </div>
-      <div className="flex box-border">
+      <div className="flex box-border justify-center">
         <div className="w-1/6"></div>
-
-        <div className="min-w-4xl max-w-5xl mx-auto cursor-pointer grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-1 box-border p-4">
-          {movies.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} fetchMovieDetails={fetchMovieDetails} />
-          ))}
+        <div className="text-center flex justify-center items-center flex-col">
+          {!movies ? (
+            <div className="mb-5 mt-5">There are currently no search results to display.</div>
+          ) : (
+            <>
+              <div className="mt-3 flex gap-3">
+                <button
+                  onClick={popButton}
+                  className={`${
+                    activeButton === "popularity" ? "bg-amber-600" : "bg-white"
+                  } justify-center items-center rounded-lg p-2 flex border`}>
+                  Popularity |
+                  {popButtonAsc ? (
+                    <img
+                      className="w-3 h-3 ml-1"
+                      src="https://cdn-icons-png.flaticon.com/128/130/130906.png"
+                      alt="Up Arrow"></img>
+                  ) : (
+                    <img
+                      className="w-3 h-3 ml-1"
+                      src="https://cdn-icons-png.flaticon.com/128/318/318426.png"
+                      alt="Down Arrow"></img>
+                  )}
+                </button>
+                <button
+                  onClick={releaseDateButton}
+                  className={`${
+                    activeButton === "releaseDate" ? "bg-amber-600" : "bg-white"
+                  } justify-center items-center rounded-lg p-2 flex border`}>
+                  Release Date |
+                  {dateButtonAsc ? (
+                    <img
+                      className="w-3 h-3 ml-1"
+                      src="https://cdn-icons-png.flaticon.com/128/130/130906.png"
+                      alt="Up Arrow"></img>
+                  ) : (
+                    <img
+                      className="w-3 h-3 ml-1"
+                      src="https://cdn-icons-png.flaticon.com/128/318/318426.png"
+                      alt="Down Arrow"></img>
+                  )}
+                </button>
+              </div>
+              <div className="min-w-4xl max-w-5xl mx-auto cursor-pointer grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-1 box-border p-2">
+                {movies.map((movie) => (
+                  <MovieCard key={movie.id} movie={movie} fetchMovieDetails={fetchMovieDetails} />
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
         <div className="w-1/6"></div>
