@@ -47,6 +47,12 @@ export default function MoviesPage({ onLogout }) {
     setPopButtonAsc(!popButtonAsc);
   }
 
+  function handleKeyDown(e) {
+    if (e.key === "Enter") {
+      searchButton(searchText);
+    }
+  }
+
   function releaseDateButton() {
     setActiveButton("releaseDate");
     if (dateButtonAsc) {
@@ -55,8 +61,10 @@ export default function MoviesPage({ onLogout }) {
           const aMovieData = a.release_date.split("-");
           const bMovieData = b.release_date.split("-");
 
-          let aRelease = aMovieData[0] * 365 + aMovieData[1] * 30 + aMovieData[2];
-          let bRelease = bMovieData[0] * 365 + bMovieData[1] * 30 + bMovieData[2];
+          let aRelease =
+            aMovieData[0] * 365 + aMovieData[1] * 30 + aMovieData[2];
+          let bRelease =
+            bMovieData[0] * 365 + bMovieData[1] * 30 + bMovieData[2];
 
           return bRelease - aRelease;
         })
@@ -67,8 +75,10 @@ export default function MoviesPage({ onLogout }) {
           const aMovieData = a.release_date.split("-");
           const bMovieData = b.release_date.split("-");
 
-          let aRelease = aMovieData[0] * 365 + aMovieData[1] * 30 + aMovieData[2];
-          let bRelease = bMovieData[0] * 365 + bMovieData[1] * 30 + bMovieData[2];
+          let aRelease =
+            aMovieData[0] * 365 + aMovieData[1] * 30 + aMovieData[2];
+          let bRelease =
+            bMovieData[0] * 365 + bMovieData[1] * 30 + bMovieData[2];
           return aRelease - bRelease;
         })
       );
@@ -137,11 +147,16 @@ export default function MoviesPage({ onLogout }) {
     <>
       <div className="bg-amber-600 flex items-center justify-end w-full p-4">
         <div className="flex-1">
-          <button className="cursor-pointer bg-white p-2 rounded-lg" onClick={handleLogout}>
+          <button
+            className="cursor-pointer bg-white p-2 rounded-lg"
+            onClick={handleLogout}
+          >
             Logout
           </button>
         </div>
-        <h1 className="flex-1 text-center text-white font-bold text-3xl">Simple Movie Site</h1>
+        <h1 className="flex-1 text-center text-white font-bold text-3xl">
+          Simple Movie Site
+        </h1>
         <div className="flex-1 flex gap-4 justify-end">
           <input
             id="searchBar"
@@ -149,12 +164,14 @@ export default function MoviesPage({ onLogout }) {
             className="bg-white p-2 rounded"
             placeholder="Search movies..."
             onChange={(e) => setSearchText(e.target.value)}
+            onKeyDown={(e) => handleKeyDown(e)}
           />
           <button
             className="cursor-pointer flex justify-center items-center text-center bg-slate-200 p-2 rounded-md"
             onClick={() => {
               searchButton(searchText);
-            }}>
+            }}
+          >
             Search
           </button>
         </div>
@@ -163,7 +180,9 @@ export default function MoviesPage({ onLogout }) {
         <div className="w-1/6"></div>
         <div className="text-center flex justify-center items-center flex-col">
           {!movies ? (
-            <div className="mb-5 mt-5">There are currently no search results to display.</div>
+            <div className="mb-5 mt-5">
+              There are currently no search results to display.
+            </div>
           ) : (
             <>
               <div className="mt-3 flex gap-3">
@@ -171,42 +190,52 @@ export default function MoviesPage({ onLogout }) {
                   onClick={popButton}
                   className={`${
                     activeButton === "popularity" ? "bg-amber-600" : "bg-white"
-                  } justify-center items-center rounded-lg p-2 flex border`}>
+                  } justify-center items-center rounded-xl   p-2 flex border cursor-pointer`}
+                >
                   Popularity |
                   {popButtonAsc ? (
                     <img
                       className="w-3 h-3 ml-1"
                       src="https://cdn-icons-png.flaticon.com/128/130/130906.png"
-                      alt="Up Arrow"></img>
+                      alt="Up Arrow"
+                    ></img>
                   ) : (
                     <img
                       className="w-3 h-3 ml-1"
                       src="https://cdn-icons-png.flaticon.com/128/318/318426.png"
-                      alt="Down Arrow"></img>
+                      alt="Down Arrow"
+                    ></img>
                   )}
                 </button>
                 <button
                   onClick={releaseDateButton}
                   className={`${
                     activeButton === "releaseDate" ? "bg-amber-600" : "bg-white"
-                  } justify-center items-center rounded-lg p-2 flex border`}>
+                  } justify-center items-center rounded-xl p-2 flex border cursor-pointer`}
+                >
                   Release Date |
                   {dateButtonAsc ? (
                     <img
                       className="w-3 h-3 ml-1"
                       src="https://cdn-icons-png.flaticon.com/128/130/130906.png"
-                      alt="Up Arrow"></img>
+                      alt="Up Arrow"
+                    ></img>
                   ) : (
                     <img
                       className="w-3 h-3 ml-1"
                       src="https://cdn-icons-png.flaticon.com/128/318/318426.png"
-                      alt="Down Arrow"></img>
+                      alt="Down Arrow"
+                    ></img>
                   )}
                 </button>
               </div>
               <div className="min-w-4xl max-w-5xl mx-auto cursor-pointer grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-1 box-border p-2">
                 {movies.map((movie) => (
-                  <MovieCard key={movie.id} movie={movie} fetchMovieDetails={fetchMovieDetails} />
+                  <MovieCard
+                    key={movie.id}
+                    movie={movie}
+                    fetchMovieDetails={fetchMovieDetails}
+                  />
                 ))}
               </div>
             </>
@@ -214,10 +243,16 @@ export default function MoviesPage({ onLogout }) {
         </div>
 
         <div className="w-1/6"></div>
-        {selectedMovie && <MovieModal selectedMovie={selectedMovie} setSelectedMovie={setSelectedMovie} />}
+        {selectedMovie && (
+          <MovieModal
+            selectedMovie={selectedMovie}
+            setSelectedMovie={setSelectedMovie}
+          />
+        )}
       </div>
       <div className="text-xs mb-14 text-center">
-        This website uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise approved by TMDB.
+        This website uses TMDB and the TMDB APIs but is not endorsed, certified,
+        or otherwise approved by TMDB.
       </div>
 
       <div className="flex-col fixed bottom-0 left-1/2 transform -translate-x-1/2 flex  z-50 bg-amber-700 w-full justify-center items-center p-2">
@@ -225,19 +260,25 @@ export default function MoviesPage({ onLogout }) {
           <button
             type="button"
             onClick={pageDecrease}
-            className="bg-amber-800 cursor-pointer  text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center ">
+            className="bg-amber-800 cursor-pointer  text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center "
+          >
             Previous Page
           </button>
           <button
             type="button"
             onClick={pageIncrease}
-            className="bg-amber-800 cursor-pointer text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center ">
+            className="bg-amber-800 cursor-pointer text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center "
+          >
             Next Page
           </button>
         </div>
       </div>
       <div className="fixed bottom-0 right-0 text-white z-100">
-        <img src="../../assets/tmdb.svg" alt="TMDB image" className="w-32 p-4" />
+        <img
+          src="../../assets/tmdb.svg"
+          alt="TMDB image"
+          className="w-32 p-4"
+        />
       </div>
     </>
   );
