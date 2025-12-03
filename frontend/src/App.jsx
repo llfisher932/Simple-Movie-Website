@@ -31,13 +31,19 @@ export default function App() {
         <LoginPage onLogin={() => setIsLoggedIn(true)} />
       )}
 
-      <div className="text-center mt-4 text-white">
+      <div className="w-full text-center text-white bottom-2 fixed flex justify-center items-center bg-gray-900">
         {showRegister ? (
-          <button className="text-white" onClick={() => setShowRegister(false)}>
+          <button
+            className="text-white cursor-pointer"
+            onClick={() => setShowRegister(false)}
+          >
             Already have an account? Login
           </button>
         ) : (
-          <button className="text-black" onClick={() => setShowRegister(true)}>
+          <button
+            className="text-white cursor-pointer"
+            onClick={() => setShowRegister(true)}
+          >
             Need an account? Register
           </button>
         )}
