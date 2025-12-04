@@ -27,7 +27,7 @@ export default function RegisterPage({ onRegister }) {
   }
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gray-900 text-white">
+    <div className="flex items-center justify-center bg-gray-900 text-white">
       <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded-lg w-80 space-y-4">
         <h1 className="text-2xl font-bold">Register</h1>
 

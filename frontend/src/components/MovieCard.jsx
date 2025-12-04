@@ -13,7 +13,6 @@ export default function MovieCard({ movie, fetchMovieDetails }) {
           credentials: "include",
         });
         const data = await res.json();
-        console.log("reviews =", data.reviews);
         if (res.ok) {
           let sum = 0;
           let counter = 0;

@@ -116,7 +116,6 @@ npm run dev
 
 - Some movies may not have posters.
 - Requires a TMDB API key.
-- Only shows last 4 reviews, but database stores all reviews.
 
 ## License
 
