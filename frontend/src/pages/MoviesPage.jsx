@@ -166,7 +166,7 @@ export default function MoviesPage({ onLogout }) {
           </button>
         </div>
       </div>
-      <div className="flex box-border justify-center">
+      <div className="flex box-border justify-center flex-col">
         <div className="w-1/6"></div>
         <div className="text-center flex justify-center items-center flex-col">
           {!movies ? (
@@ -211,7 +211,7 @@ export default function MoviesPage({ onLogout }) {
                   )}
                 </button>
               </div>
-              <div className="lg:min-w-4xl md:min-w-2xl max-w-5xl mx-auto cursor-pointer grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-1 box-border p-2">
+              <div className="lg:min-w-4xl md:min-w-2xl md:max-w-5xl min-w-xs max-w-xs mx-auto cursor-pointer grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-1 box-border p-2">
                 {movies.map((movie) => (
                   <MovieCard key={movie.id} movie={movie} fetchMovieDetails={fetchMovieDetails} />
                 ))}
@@ -222,12 +222,13 @@ export default function MoviesPage({ onLogout }) {
 
         <div className="w-1/6"></div>
         {selectedMovie && <MovieModal selectedMovie={selectedMovie} setSelectedMovie={setSelectedMovie} />}
-      </div>
-      <div className="text-xs mb-14 text-center">
-        This website uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise approved by TMDB.
+        <div className="text-xs mb-15 text-center justify-center items-center flex flex-col">
+          This website uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise approved by TMDB.
+          <img src="../../assets/tmdb.svg" alt="TMDB image" className="w-24 p-4 flex" />
+        </div>
       </div>
 
-      <div className="flex-col fixed bottom-0 left-1/2 transform -translate-x-1/2 flex  z-50 bg-amber-700 w-full justify-center items-center p-2">
+      <div className="flex-col fixed bottom-0 left-1/2 transform -translate-x-1/2 flex  z-50 bg-amber-600 w-full justify-center items-center p-2">
         <div className="flex gap-4">
           <button
             type="button"
@@ -242,10 +243,6 @@ export default function MoviesPage({ onLogout }) {
             Next Page
           </button>
         </div>
-      </div>
-      <div className="fixed bottom-0 right-0 text-white z-100">
-        <img src="../../assets/tmdb.svg" alt="TMDB image" className="w-32 p-4 hidden md:block" />
-        <img src="../../assets/tmdb2.svg" alt="TMDB image" className="w-12 mb-2 p-2 md:hidden" />
       </div>
     </>
   );
