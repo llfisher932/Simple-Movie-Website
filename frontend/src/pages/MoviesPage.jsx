@@ -1,10 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import "../App.css";
 import MovieModal from "../components/MovieModal.jsx";
 import MovieCard from "../components/MovieCard.jsx";
+const BACKEND_URL = "http://localhost:5000";
+const ENDPOINTS = {
+  LOGOUT: "/logout",
+  GET_MOVIES: "/getMovies",
+  GET_DETAILS: "/getMovieDetails",
+};
 
 export default function MoviesPage({ onLogout }) {
-  const API_KEY = import.meta.env.VITE_OMDB_API_KEY;
   const [movies, setMovies] = useState();
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
@@ -14,6 +19,27 @@ export default function MoviesPage({ onLogout }) {
   const [dateButtonAsc, setDateButtonAsc] = useState(false);
   const [activeButton, setActiveButton] = useState("");
 
+  const fetchMovies = useCallback(async (query, pageNumber) => {
+    try {
+      const res = await fetch(`${BACKEND_URL}${ENDPOINTS.GET_MOVIES}`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: `${query}`, page: `${pageNumber}` }),
+      });
+
+      if (!res.ok) throw new Error("Response Invalid.");
+      const data = await res.json();
+
+      if (data.movies.length > 0) {
+        setMovies(data.movies);
+      } else {
+        setMovies();
+      }
+    } catch (err) {
+      console.error("Error Fetching Movies: ", err);
+    }
+  }, []); // Empty array = function never changes
   function pageIncrease() {
     setPageNumber((prev) => prev + 1);
   }
@@ -28,22 +54,23 @@ export default function MoviesPage({ onLogout }) {
     setDisplayedSearch(searchText);
     setPageNumber(1);
   }
+  const sortMovies = (movies, sortBy, ascending) => {
+    return [...movies].sort((a, b) => {
+      let aVal, bVal;
+      if (sortBy === "popularity") {
+        aVal = a.popularity;
+        bVal = b.popularity;
+      } else {
+        aVal = new Date(a.release_date);
+        bVal = new Date(b.release_date);
+      }
+      return ascending ? aVal - bVal : bVal - aVal;
+    });
+  };
 
   function popButton() {
     setActiveButton("popularity");
-    if (popButtonAsc) {
-      setMovies(
-        [...movies].sort((a, b) => {
-          return b.popularity - a.popularity;
-        })
-      );
-    } else {
-      setMovies(
-        [...movies].sort((a, b) => {
-          return a.popularity - b.popularity;
-        })
-      );
-    }
+    sortMovies(movies, "popularity", popButtonAsc);
     setPopButtonAsc(!popButtonAsc);
   }
 
@@ -55,42 +82,18 @@ export default function MoviesPage({ onLogout }) {
 
   function releaseDateButton() {
     setActiveButton("releaseDate");
-    if (dateButtonAsc) {
-      setMovies(
-        [...movies].sort((a, b) => {
-          const aMovieData = a.release_date.split("-");
-          const bMovieData = b.release_date.split("-");
-
-          let aRelease = aMovieData[0] * 365 + aMovieData[1] * 30 + aMovieData[2];
-          let bRelease = bMovieData[0] * 365 + bMovieData[1] * 30 + bMovieData[2];
-
-          return bRelease - aRelease;
-        })
-      );
-    } else {
-      setMovies(
-        [...movies].sort((a, b) => {
-          const aMovieData = a.release_date.split("-");
-          const bMovieData = b.release_date.split("-");
-
-          let aRelease = aMovieData[0] * 365 + aMovieData[1] * 30 + aMovieData[2];
-          let bRelease = bMovieData[0] * 365 + bMovieData[1] * 30 + bMovieData[2];
-          return aRelease - bRelease;
-        })
-      );
-    }
+    sortMovies(movies, "date", dateButtonAsc);
     setDateButtonAsc(!dateButtonAsc);
   }
 
   useEffect(() => {
-    //runs when either of the values passed in the array changes.
     if (displayedSearch) {
       fetchMovies(displayedSearch, pageNumber);
     }
-  }, [displayedSearch, pageNumber]);
+  }, [displayedSearch, pageNumber, fetchMovies]);
 
   async function handleLogout() {
-    const res = await fetch("http://localhost:5000/logout", {
+    const res = await fetch(`${BACKEND_URL}${ENDPOINTS.LOGOUT}`, {
       method: "POST",
       credentials: "include",
     });
@@ -98,45 +101,25 @@ export default function MoviesPage({ onLogout }) {
     onLogout();
   }
 
-  async function fetchMovies(query, pageNumber) {
+  async function fetchMovieDetails(id) {
     try {
-      const res = await fetch("http://localhost:5000/getMovies", {
+      const res = await fetch(`${BACKEND_URL}${ENDPOINTS.GET_DETAILS}`, {
         method: "POST",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ query: `${query}`, page: `${pageNumber}` }),
+        body: JSON.stringify({ id: `${id}` }),
       });
 
       if (!res.ok) throw new Error("Response Invalid.");
 
       const data = await res.json();
 
-      if (data.movies.length > 0) {
-        setMovies(data.movies);
-      } else {
-        setMovies();
-      }
+      setSelectedMovie(data.movie);
     } catch (err) {
-      console.error("Error Fetching Movies: ", err);
+      console.error("Error Fetching Movie Details: ", err);
     }
-  }
-  async function fetchMovieDetails(id) {
-    const res = await fetch("http://localhost:5000/getMovieDetails", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id: `${id}` }),
-    });
-
-    if (!res.ok) throw new Error("Response Invalid.");
-
-    const data = await res.json();
-
-    setSelectedMovie(data.movie);
   }
 
   return (
@@ -152,7 +135,7 @@ export default function MoviesPage({ onLogout }) {
           <input
             id="searchBar"
             type="text"
-            className="bg-white p-2 rounde w-full"
+            className="bg-white p-2 rounded w-full"
             placeholder="Search movies..."
             onChange={(e) => setSearchText(e.target.value)}
             onKeyDown={(e) => handleKeyDown(e)}

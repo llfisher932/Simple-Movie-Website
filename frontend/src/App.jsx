@@ -15,7 +15,6 @@ export default function App() {
 
       const data = await res.json();
       setIsLoggedIn(data.loggedIn);
-      setLoading(false);
     }
 
     checkLogin();
