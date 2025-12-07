@@ -11,18 +11,27 @@ A React + Express application where users can browse movies, submit reviews with
 - Submit movie reviews with star ratings (1-5 stars)
 - View the 4 most recent reviews for each movie
 - Responsive modal for movie details and reviews
+- Responsive webpage for all screeen sizes.
 - Passwords securely hashed with bcrypt
 - Session handling with `express-session`
 
 ## Screenshots
 
-### A full view of the website with movies loaded:
+### A full view of the website with movies loaded (desktop):
 
-![A full view of the website with movies loaded.](./assets/moviedemo8.png)
+![A full view of the website with movies loaded.](./assets/movieassets1.png)
 
-### A view of the details page for a specific movie:
+### A view of the details page for a specific movie (desktop):
 
-![A view of the details page for a specific movie.](./assets/moviedemo7.png)
+![A view of the details page for a specific movie.](./assets/movieassets2.png)
+
+### A full view of the website with movies loaded (mobile):
+
+![A view of the details page for a specific movie.](./assets/movieassets3.png)
+
+### A view of the details page for a specific movie (mobile):
+
+![A view of the details page for a specific movie.](./assets/movieassets4.png)
 
 ## Installation
 
