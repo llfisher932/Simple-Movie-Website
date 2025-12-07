@@ -7,11 +7,12 @@ A React + Express application where users can browse movies, submit reviews with
 ## Features
 
 - Search and View movies using TMDB
+- Sort movies by different metrics
 - User registration and login (with session authentication)
 - Submit movie reviews with star ratings (1-5 stars)
 - View the 4 most recent reviews for each movie
 - Responsive modal for movie details and reviews
-- Responsive webpage for all screeen sizes.
+- Responsive webpage for all screeen sizes
 - Passwords securely hashed with bcrypt
 - Session handling with `express-session`
 
@@ -19,19 +20,19 @@ A React + Express application where users can browse movies, submit reviews with
 
 ### A full view of the website with movies loaded (desktop):
 
-![A full view of the website with movies loaded.](./assets/movieassets1.png)
+![A full view of the website with movies loaded.](./assets/movieasset1.png)
 
 ### A view of the details page for a specific movie (desktop):
 
-![A view of the details page for a specific movie.](./assets/movieassets2.png)
+![A view of the details page for a specific movie.](./assets/movieasset2.png)
 
 ### A full view of the website with movies loaded (mobile):
 
-![A view of the details page for a specific movie.](./assets/movieassets3.png)
+![A view of the details page for a specific movie.](./assets/movieasset3.png)
 
 ### A view of the details page for a specific movie (mobile):
 
-![A view of the details page for a specific movie.](./assets/movieassets4.png)
+![A view of the details page for a specific movie.](./assets/movieasset4.png)
 
 ## Installation
 
