@@ -94,6 +94,27 @@ app.post("/addreview", async (req, res) => {
   }
 });
 
+//new review logic
+app.post("/watchlater", async (req, res) => {
+  const { movieID } = req.body; //received from frontend
+  const userID = req.session.userId; //express session stores the userID the whole time they are logged in.
+  if (!userID) {
+    return res.status(400).json({ error: "Missing userID (user not logged in)" });
+  }
+
+  try {
+    const result = await pool.query("INSERT INTO saved_movies (user_id, movie_id) VALUES ($1, $2) returning *", [
+      userID,
+      movieID,
+    ]);
+
+    res.json({ success: true, review: result.rows[0] });
+  } catch (err) {
+    console.error("Watch Later Insert error:", err);
+    res.status(500).json({ error: "Movie already in watch later!" });
+  }
+});
+
 //register logic
 app.post("/register", async (req, res) => {
   const { username, email, password } = req.body;

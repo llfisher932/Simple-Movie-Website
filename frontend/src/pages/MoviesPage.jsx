@@ -9,7 +9,7 @@ const ENDPOINTS = {
   GET_DETAILS: "/getMovieDetails",
 };
 
-export default function MoviesPage({ onLogout }) {
+export default function MoviesPage({ swapPage, onLogout }) {
   const [movies, setMovies] = useState();
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [pageNumber, setPageNumber] = useState(1);
@@ -70,7 +70,8 @@ export default function MoviesPage({ onLogout }) {
 
   function popButton() {
     setActiveButton("popularity");
-    sortMovies(movies, "popularity", popButtonAsc);
+    const sorted = sortMovies(movies, "popularity", popButtonAsc);
+    setMovies(sorted);
     setPopButtonAsc(!popButtonAsc);
   }
 
@@ -82,7 +83,8 @@ export default function MoviesPage({ onLogout }) {
 
   function releaseDateButton() {
     setActiveButton("releaseDate");
-    sortMovies(movies, "date", dateButtonAsc);
+    const sorted = sortMovies(movies, "date", dateButtonAsc);
+    setMovies(sorted);
     setDateButtonAsc(!dateButtonAsc);
   }
 
@@ -124,9 +126,9 @@ export default function MoviesPage({ onLogout }) {
 
   return (
     <>
-      <div className="bg-amber-600 flex items-center justify-end w-full p-4">
+      <div className="bg-gray-800 flex items-center justify-end w-full p-4">
         <div className="flex-1">
-          <button className="cursor-pointer bg-white p-2 rounded-lg" onClick={handleLogout}>
+          <button className="cursor-pointer text-white bg-amber-700 p-2 rounded-lg" onClick={handleLogout}>
             Logout
           </button>
         </div>
@@ -141,7 +143,7 @@ export default function MoviesPage({ onLogout }) {
             onKeyDown={(e) => handleKeyDown(e)}
           />
           <button
-            className="cursor-pointer flex justify-center items-center text-center bg-slate-200 p-2 rounded-md"
+            className="text-white cursor-pointer flex justify-center items-center text-center bg-amber-700 p-2 rounded-md"
             onClick={() => {
               searchButton(searchText);
             }}>
@@ -160,8 +162,8 @@ export default function MoviesPage({ onLogout }) {
                 <button
                   onClick={popButton}
                   className={`${
-                    activeButton === "popularity" ? "bg-amber-600" : "bg-white"
-                  } justify-center items-center rounded-xl   p-2 flex border cursor-pointer`}>
+                    activeButton === "popularity" ? "bg-amber-700" : "bg-gray-800"
+                  } justify-center items-center rounded-xl p-2 flex cursor-pointer text-white`}>
                   Popularity |
                   {popButtonAsc ? (
                     <img
@@ -178,8 +180,8 @@ export default function MoviesPage({ onLogout }) {
                 <button
                   onClick={releaseDateButton}
                   className={`${
-                    activeButton === "releaseDate" ? "bg-amber-600" : "bg-white"
-                  } justify-center items-center rounded-xl p-2 flex border cursor-pointer`}>
+                    activeButton === "releaseDate" ? "bg-amber-700" : "bg-gray-800"
+                  } justify-center items-center rounded-xl p-2 flex cursor-pointer text-white`}>
                   Release Date |
                   {dateButtonAsc ? (
                     <img
@@ -211,18 +213,26 @@ export default function MoviesPage({ onLogout }) {
         </div>
       </div>
 
-      <div className="flex-col fixed bottom-0 left-1/2 transform -translate-x-1/2 flex  z-50 bg-amber-600 w-full justify-center items-center p-2">
-        <div className="flex gap-4">
+      <div className="flex-col fixed bottom-0 left-1/2 transform -translate-x-1/2 flex  z-50 bg-gray-800 w-full justify-centeritems-center p-2">
+        <div className="flex-row flex justify-between w-full gap-4">
           <button
             type="button"
             onClick={pageDecrease}
-            className="bg-amber-800 cursor-pointer  text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center ">
+            className="bg-amber-700 cursor-pointer  text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center ">
             Previous Page
           </button>
+          <div className="absolute left-1/2 transform -translate-x-1/2">
+            <button
+              type="button"
+              onClick={swapPage}
+              className="bg-amber-700 cursor-pointer text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center ">
+              View Saved Movies
+            </button>
+          </div>
           <button
             type="button"
             onClick={pageIncrease}
-            className="bg-amber-800 cursor-pointer text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center ">
+            className="bg-amber-700 cursor-pointer text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center ">
             Next Page
           </button>
         </div>

@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import MoviesPage from "./pages/MoviesPage";
+import SavedPage from "./pages/SavedPage";
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+  const [showMovies, setShowMovies] = useState(true);
 
   useEffect(() => {
     async function checkLogin() {
@@ -20,7 +22,12 @@ export default function App() {
     checkLogin();
   }, []);
 
-  if (isLoggedIn) return <MoviesPage onLogout={() => setIsLoggedIn(false)} />;
+  if (isLoggedIn)
+    return showMovies ? (
+      <MoviesPage swapPage={() => setShowMovies(false)} onLogout={() => setIsLoggedIn(false)} />
+    ) : (
+      <SavedPage swapPage={() => setShowMovies(true)} />
+    );
 
   return (
     <>
