@@ -28,11 +28,15 @@ A React + Express application where users can browse movies, submit reviews with
 
 ### A full view of the website with movies loaded (mobile):
 
-![A view of the details page for a specific movie.](./assets/movieasset3.png)
+![A full view of the website with movies loaded on mobile.](./assets/movieasset3.png)
 
 ### A view of the details page for a specific movie (mobile):
 
-![A view of the details page for a specific movie.](./assets/movieasset4.png)
+![A view of the details page for a specific movie on mobile.](./assets/movieasset4.png)
+
+### A view of the saved movies page (desktop):
+
+![A view of the saved movies page.](./assets/movieasset5.png)
 
 ## Installation
 
@@ -84,6 +88,18 @@ CREATE TABLE reviews (
   review_number INTEGER NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE saved_movies (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    movie_id INTEGER NOT NULL,
+    saved_at TIMESTAMPTZ DEFAULT NOW(),
+
+    UNIQUE (user_id, movie_id),
+
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 ```
 
 ### Running the app:
@@ -110,6 +126,8 @@ npm run dev
 
 - Reviews are submitted and appear immediately without refreshing.
 
+- Save movies to watch them later or remove them from the list.
+
 ---
 
 ## Technologies
@@ -126,6 +144,8 @@ npm run dev
 
 - Some movies may not have posters.
 - Requires a TMDB API key.
+- Mobile UI needs to be updated for watch later button, currently broken.
+- Code for fetching and saving movies to watch later is messy and needs to be refactored.
 
 ## License
 
