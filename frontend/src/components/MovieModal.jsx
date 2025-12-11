@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import MovieReview from "./MovieReview";
 
-export default function MovieModal({ selectedMovie, setSelectedMovie }) {
+export default function MovieModal({ selectedMovie, setSelectedMovie, reloadSavedMovies }) {
   const [reviewText, setReviewText] = useState("");
   const [reviewNumber, setReviewNumber] = useState(1);
   const [reviews, setReviews] = useState([]);
@@ -9,6 +9,38 @@ export default function MovieModal({ selectedMovie, setSelectedMovie }) {
   const [starRating, setStarRating] = useState(0);
   const [error, setError] = useState();
   const showPlaceholder = selectedMovie.poster_path === "N/A" || imgError;
+  const [isSaved, setIsSaved] = useState(false);
+  const BACKEND_URL = "http://localhost:5000";
+  const ENDPOINTS = {
+    LOGOUT: "/logout",
+    GET_MOVIES: "/getMovies",
+    GET_SAVED_MOVIES: "/getSavedMovies",
+    GET_DETAILS: "/getMovieDetails",
+  };
+  async function fetchSavedMovies() {
+    try {
+      const res = await fetch(`${BACKEND_URL}${ENDPOINTS.GET_SAVED_MOVIES}`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) throw new Error("Response Invalid.");
+
+      const data = await res.json();
+
+      if (data.movies.some((m) => m.movie_id === selectedMovie.id)) setIsSaved(true);
+      console.log(isSaved);
+      console.log(data.movies);
+    } catch (err) {
+      console.error("Error Fetching Saved Movies: ", err);
+    }
+  }
+  useEffect(() => {
+    fetchSavedMovies(); // or whatever default query/page you want
+  }, []);
 
   useEffect(() => {
     if (!selectedMovie) return;
@@ -98,6 +130,8 @@ export default function MovieModal({ selectedMovie, setSelectedMovie }) {
 
     const data = await res.json();
 
+    setIsSaved(true);
+    reloadSavedMovies && reloadSavedMovies();
     if (!res.ok) {
       console.error(data.error);
       setError(data.error);
@@ -106,7 +140,27 @@ export default function MovieModal({ selectedMovie, setSelectedMovie }) {
 
     //review form clear
   }
+  async function removeWatchLater() {
+    const movieID = selectedMovie.id;
 
+    const res = await fetch("http://localhost:5000/removewatchlater", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ movieID }),
+    });
+
+    const data = await res.json();
+    setIsSaved(false);
+    reloadSavedMovies && reloadSavedMovies();
+    if (!res.ok) {
+      console.error(data.error);
+      setError(data.error);
+      return;
+    }
+
+    //review form clear
+  }
   async function getReviews() {
     const movieID = selectedMovie.id;
 
@@ -155,9 +209,16 @@ export default function MovieModal({ selectedMovie, setSelectedMovie }) {
               //logic above is to make sure that posters display properly. If no poster is found or loads, show a No Poster Available "poster" instead
             )}
             {error && <p className="text-red-400 mb-2">{error}</p>}
-            <button className="bg-amber-700 p-2 rounded-lg cursor-pointer" onClick={() => watchLater()}>
-              Add to watch list?
-            </button>
+            {isSaved ? (
+              <button className="bg-red-600 p-2 rounded-lg cursor-pointer" onClick={() => removeWatchLater()}>
+                Remove from watch list?
+              </button>
+            ) : (
+              <button className="bg-green-600 p-2 rounded-lg cursor-pointer" onClick={() => watchLater()}>
+                Add to watch list?
+              </button>
+            )}
+
             <h1 className="text-2xl font-bold mb-2">{selectedMovie.title}</h1>
             <p className="mb-2">{selectedMovie.overview}</p>
             <p className="mb-1">Release Date: {selectedMovie.release_date}</p>

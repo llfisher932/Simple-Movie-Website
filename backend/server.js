@@ -94,7 +94,7 @@ app.post("/addreview", async (req, res) => {
   }
 });
 
-//new review logic
+//watch later logic
 app.post("/watchlater", async (req, res) => {
   const { movieID } = req.body; //received from frontend
   const userID = req.session.userId; //express session stores the userID the whole time they are logged in.
@@ -112,6 +112,45 @@ app.post("/watchlater", async (req, res) => {
   } catch (err) {
     console.error("Watch Later Insert error:", err);
     res.status(500).json({ error: "Movie already in watch later!" });
+  }
+});
+
+//watch later remove logic
+app.post("/removewatchlater", async (req, res) => {
+  const { movieID } = req.body; //received from frontend
+  const userID = req.session.userId; //express session stores the userID the whole time they are logged in.
+  if (!userID) {
+    return res.status(400).json({ error: "Missing userID (user not logged in)" });
+  }
+
+  try {
+    const result = await pool.query("DELETE FROM saved_movies WHERE user_id = $1 AND movie_id = $2 RETURNING *", [
+      userID,
+      movieID,
+    ]);
+
+    res.json({ success: true, review: result.rows[0] });
+  } catch (err) {
+    console.error("Watch Later Deletion error:", err);
+    res.status(500).json({ error: "Movie not in watch later!" });
+  }
+});
+
+//get saved movies logic
+app.post("/getSavedMovies", async (req, res) => {
+  const userID = req.session.userId; //express session stores the userID the whole time they are logged in.
+  if (!userID) {
+    return res.status(400).json({ error: "Missing userID (user not logged in)" });
+  }
+  try {
+    const result = await pool.query("SELECT movie_id FROM saved_movies WHERE user_id = $1 ORDER BY saved_at DESC", [
+      userID,
+    ]);
+
+    res.json({ movies: result.rows });
+  } catch (err) {
+    console.error("Error fetching movies:", err);
+    res.status(500).json({ error: "Database error" });
   }
 });
 

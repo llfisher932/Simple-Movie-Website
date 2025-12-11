@@ -3,34 +3,91 @@ import "../App.css";
 import MovieModal from "../components/MovieModal.jsx";
 import MovieCard from "../components/MovieCard.jsx";
 import React from "react";
-
-async function fetchMovieDetails(id) {
-  try {
-    const res = await fetch(`${BACKEND_URL}${ENDPOINTS.GET_DETAILS}`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id: `${id}` }),
-    });
-
-    if (!res.ok) throw new Error("Response Invalid.");
-
-    const data = await res.json();
-
-    setSelectedMovie(data.movie);
-  } catch (err) {
-    console.error("Error Fetching Movie Details: ", err);
-  }
-}
+const BACKEND_URL = "http://localhost:5000";
+const ENDPOINTS = {
+  LOGOUT: "/logout",
+  GET_MOVIES: "/getMovies",
+  GET_SAVED_MOVIES: "/getSavedMovies",
+  GET_DETAILS: "/getMovieDetails",
+};
 
 const SavedPage = ({ swapPage }) => {
   const [popButtonAsc, setPopButtonAsc] = useState(false);
   const [dateButtonAsc, setDateButtonAsc] = useState(false);
   const [activeButton, setActiveButton] = useState("");
+  const [movieIDs, setMovieIDs] = useState();
   const [movies, setMovies] = useState();
   const [selectedMovie, setSelectedMovie] = useState(null);
+  async function fetchMovieDetailsModal(id) {
+    try {
+      const res = await fetch(`${BACKEND_URL}${ENDPOINTS.GET_DETAILS}`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: `${id}` }),
+      });
+
+      if (!res.ok) throw new Error("Response Invalid.");
+
+      const data = await res.json();
+
+      setSelectedMovie(data.movie);
+    } catch (err) {
+      console.error("Error Fetching Movie Details: ", err);
+    }
+  }
+  async function fetchMovieDetails(id) {
+    try {
+      const res = await fetch(`${BACKEND_URL}${ENDPOINTS.GET_DETAILS}`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: `${id}` }),
+      });
+
+      if (!res.ok) throw new Error("Response Invalid.");
+
+      const data = await res.json();
+
+      return data.movie;
+    } catch (err) {
+      console.error("Error Fetching Movie Details: ", err);
+    }
+  }
+  async function fetchSavedMovies() {
+    try {
+      const res = await fetch(`${BACKEND_URL}${ENDPOINTS.GET_SAVED_MOVIES}`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) throw new Error("Response Invalid.");
+
+      const data = await res.json();
+
+      // list of IDs from backend
+      setMovieIDs(data.movies);
+
+      // fetch details for each ID
+      const fullMovies = await Promise.all(
+        data.movies.map((m) => fetchMovieDetails(m.movie_id)) // FIX HERE
+      );
+
+      setMovies(fullMovies); // store final array
+    } catch (err) {
+      console.error("Error Fetching Saved Movies: ", err);
+    }
+  }
+  useEffect(() => {
+    fetchSavedMovies(); // or whatever default query/page you want
+  }, []);
 
   return (
     <>
@@ -46,47 +103,10 @@ const SavedPage = ({ swapPage }) => {
             <div className="mb-5 mt-5">There are currently no saved movies to display.</div>
           ) : (
             <>
-              <div className="mt-3 flex gap-3">
-                <button
-                  onClick={popButton}
-                  className={`${
-                    activeButton === "popularity" ? "bg-amber-700" : "bg-gray-800"
-                  } justify-center items-center rounded-xl p-2 flex cursor-pointer text-white`}>
-                  Popularity |
-                  {popButtonAsc ? (
-                    <img
-                      className="w-3 h-3 ml-1"
-                      src="https://cdn-icons-png.flaticon.com/128/130/130906.png"
-                      alt="Up Arrow"></img>
-                  ) : (
-                    <img
-                      className="w-3 h-3 ml-1"
-                      src="https://cdn-icons-png.flaticon.com/128/318/318426.png"
-                      alt="Down Arrow"></img>
-                  )}
-                </button>
-                <button
-                  onClick={releaseDateButton}
-                  className={`${
-                    activeButton === "releaseDate" ? "bg-amber-700" : "bg-gray-800"
-                  } justify-center items-center rounded-xl p-2 flex cursor-pointer text-white`}>
-                  Release Date |
-                  {dateButtonAsc ? (
-                    <img
-                      className="w-3 h-3 ml-1"
-                      src="https://cdn-icons-png.flaticon.com/128/130/130906.png"
-                      alt="Up Arrow"></img>
-                  ) : (
-                    <img
-                      className="w-3 h-3 ml-1"
-                      src="https://cdn-icons-png.flaticon.com/128/318/318426.png"
-                      alt="Down Arrow"></img>
-                  )}
-                </button>
-              </div>
+              <div className="mt-3 flex gap-3"></div>
               <div className="lg:min-w-4xl md:min-w-2xl md:max-w-5xl min-w-xs max-w-xs mx-auto cursor-pointer grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-1 box-border p-2">
                 {movies.map((movie) => (
-                  <MovieCard key={movie.id} movie={movie} fetchMovieDetails={fetchMovieDetails} />
+                  <MovieCard key={movie.id} movie={movie} fetchMovieDetails={fetchMovieDetailsModal} />
                 ))}
               </div>
             </>
@@ -94,7 +114,13 @@ const SavedPage = ({ swapPage }) => {
         </div>
 
         <div className="w-1/6"></div>
-        {selectedMovie && <MovieModal selectedMovie={selectedMovie} setSelectedMovie={setSelectedMovie} />}
+        {selectedMovie && (
+          <MovieModal
+            selectedMovie={selectedMovie}
+            setSelectedMovie={setSelectedMovie}
+            reloadSavedMovies={fetchSavedMovies}
+          />
+        )}
         <div className="text-xs mb-15 text-center justify-center items-center flex flex-col">
           This website uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise approved by TMDB.
           <img src="../../assets/tmdb.svg" alt="TMDB image" className="w-24 p-4 flex" />
