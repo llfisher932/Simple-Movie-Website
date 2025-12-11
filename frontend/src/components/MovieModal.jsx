@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import MovieReview from "./MovieReview";
+import { BACKEND_URL, ENDPOINTS } from "../config";
 
 export default function MovieModal({ selectedMovie, setSelectedMovie, reloadSavedMovies }) {
   const [reviewText, setReviewText] = useState("");
@@ -10,13 +11,7 @@ export default function MovieModal({ selectedMovie, setSelectedMovie, reloadSave
   const [error, setError] = useState();
   const showPlaceholder = selectedMovie.poster_path === "N/A" || imgError;
   const [isSaved, setIsSaved] = useState(false);
-  const BACKEND_URL = "http://localhost:5000";
-  const ENDPOINTS = {
-    LOGOUT: "/logout",
-    GET_MOVIES: "/getMovies",
-    GET_SAVED_MOVIES: "/getSavedMovies",
-    GET_DETAILS: "/getMovieDetails",
-  };
+
   async function fetchSavedMovies() {
     try {
       const res = await fetch(`${BACKEND_URL}${ENDPOINTS.GET_SAVED_MOVIES}`, {
@@ -38,6 +33,7 @@ export default function MovieModal({ selectedMovie, setSelectedMovie, reloadSave
       console.error("Error Fetching Saved Movies: ", err);
     }
   }
+
   useEffect(() => {
     fetchSavedMovies(); // or whatever default query/page you want
   }, []);
@@ -48,7 +44,8 @@ export default function MovieModal({ selectedMovie, setSelectedMovie, reloadSave
     async function loadStars() {
       const movieID = selectedMovie.id;
       try {
-        const res = await fetch(`http://localhost:5000/getreviews/${movieID}`, {
+        const res = await fetch(`${BACKEND_URL}${ENDPOINTS.GET_REVIEWS}/${movieID}`, {
+          //TODO REFACTOR WITH LOADREVIEWS BELOW
           //get reviews based on movieID, not sensitive info or modifying so GET works
           credentials: "include",
         });
@@ -76,7 +73,7 @@ export default function MovieModal({ selectedMovie, setSelectedMovie, reloadSave
     async function loadReviews() {
       const movieID = selectedMovie.id;
       try {
-        const res = await fetch(`http://localhost:5000/getreviews/${movieID}`, {
+        const res = await fetch(`${BACKEND_URL}${ENDPOINTS.GET_REVIEWS}/${movieID}`, {
           //get reviews based on movieID, not sensitive info or modifying so GET works
           credentials: "include",
         });

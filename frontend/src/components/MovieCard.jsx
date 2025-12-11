@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 
-export default function MovieCard({ movie, fetchMovieDetails }) {
+export default function MovieCard({ movie, fetchMovieDetailsModal }) {
   const [starRating, setStarRating] = useState(0);
 
   useEffect(() => {
@@ -71,7 +71,7 @@ export default function MovieCard({ movie, fetchMovieDetails }) {
   return (
     <div
       onClick={() => {
-        fetchMovieDetails(movie.id);
+        fetchMovieDetailsModal(movie.id);
       }}
       className="w-full bg-gray-800 p-3 rounded-lg text-white text-center flex flex-col box-border max-w-sm">
       {showPlaceholder ? (

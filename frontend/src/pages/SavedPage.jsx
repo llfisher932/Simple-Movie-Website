@@ -3,6 +3,7 @@ import "../App.css";
 import MovieModal from "../components/MovieModal.jsx";
 import MovieCard from "../components/MovieCard.jsx";
 import React from "react";
+import fetchMovieDetailsModal from "../utils/fetchMovieDetails.js";
 const BACKEND_URL = "http://localhost:5000";
 const ENDPOINTS = {
   LOGOUT: "/logout",
@@ -18,26 +19,11 @@ const SavedPage = ({ swapPage }) => {
   const [movieIDs, setMovieIDs] = useState();
   const [movies, setMovies] = useState();
   const [selectedMovie, setSelectedMovie] = useState(null);
-  async function fetchMovieDetailsModal(id) {
-    try {
-      const res = await fetch(`${BACKEND_URL}${ENDPOINTS.GET_DETAILS}`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id: `${id}` }),
-      });
 
-      if (!res.ok) throw new Error("Response Invalid.");
-
-      const data = await res.json();
-
-      setSelectedMovie(data.movie);
-    } catch (err) {
-      console.error("Error Fetching Movie Details: ", err);
-    }
+  function modalFetchPass(id) {
+    fetchMovieDetailsModal(id, setSelectedMovie);
   }
+
   async function fetchMovieDetails(id) {
     try {
       const res = await fetch(`${BACKEND_URL}${ENDPOINTS.GET_DETAILS}`, {
@@ -106,7 +92,7 @@ const SavedPage = ({ swapPage }) => {
               <div className="mt-3 flex gap-3"></div>
               <div className="lg:min-w-4xl md:min-w-2xl md:max-w-5xl min-w-xs max-w-xs mx-auto cursor-pointer grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-1 box-border p-2">
                 {movies.map((movie) => (
-                  <MovieCard key={movie.id} movie={movie} fetchMovieDetails={fetchMovieDetailsModal} />
+                  <MovieCard key={movie.id} movie={movie} fetchMovieDetailsModal={modalFetchPass} />
                 ))}
               </div>
             </>
