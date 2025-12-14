@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
+import { BACKEND_URL, ENDPOINTS } from "../config";
 
 export default function MovieCard({ movie, fetchMovieDetailsModal }) {
   const [starRating, setStarRating] = useState(0);
@@ -8,7 +9,7 @@ export default function MovieCard({ movie, fetchMovieDetailsModal }) {
     async function loadStars() {
       const movieID = movie.id;
       try {
-        const res = await fetch(`http://localhost:5000/getreviews/${movieID}`, {
+        const res = await fetch(`${BACKEND_URL}${ENDPOINTS.GET_REVIEWS}/${movieID}`, {
           //get reviews based on movieID, not sensitive info or modifying so GET works
           credentials: "include",
         });

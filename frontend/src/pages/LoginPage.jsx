@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { BACKEND_URL, ENDPOINTS } from "../config";
 
 export default function LoginPage({ onLogin }) {
   const [email, setEmail] = useState("");
@@ -9,7 +10,7 @@ export default function LoginPage({ onLogin }) {
     e.preventDefault();
     setError("");
 
-    const res = await fetch("http://localhost:5000/login", {
+    const res = await fetch(`${BACKEND_URL}${ENDPOINTS.LOGIN}`, {
       method: "POST",
       credentials: "include", // ccookies/sessions
       headers: {

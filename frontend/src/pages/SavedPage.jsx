@@ -4,13 +4,7 @@ import MovieModal from "../components/MovieModal.jsx";
 import MovieCard from "../components/MovieCard.jsx";
 import React from "react";
 import fetchMovieDetailsModal from "../utils/fetchMovieDetails.js";
-const BACKEND_URL = "http://localhost:5000";
-const ENDPOINTS = {
-  LOGOUT: "/logout",
-  GET_MOVIES: "/getMovies",
-  GET_SAVED_MOVIES: "/getSavedMovies",
-  GET_DETAILS: "/getMovieDetails",
-};
+import { BACKEND_URL, ENDPOINTS } from "../config.js";
 
 const SavedPage = ({ swapPage }) => {
   const [popButtonAsc, setPopButtonAsc] = useState(false);

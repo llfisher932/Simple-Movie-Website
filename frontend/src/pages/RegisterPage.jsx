@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { BACKEND_URL, ENDPOINTS } from "../config";
 
 export default function RegisterPage({ onRegister }) {
   const [username, setUsername] = useState("");
@@ -9,7 +10,7 @@ export default function RegisterPage({ onRegister }) {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    const res = await fetch("http://localhost:5000/register", {
+    const res = await fetch(`${BACKEND_URL}${ENDPOINTS.REGISTER}`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },

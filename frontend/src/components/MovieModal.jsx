@@ -92,7 +92,7 @@ export default function MovieModal({ selectedMovie, setSelectedMovie, reloadSave
     e.preventDefault();
     const movieID = selectedMovie.id;
 
-    const res = await fetch("http://localhost:5000/addreview", {
+    const res = await fetch(`${BACKEND_URL}${ENDPOINTS.ADD_REVIEW}`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -118,7 +118,7 @@ export default function MovieModal({ selectedMovie, setSelectedMovie, reloadSave
   async function watchLater() {
     const movieID = selectedMovie.id;
 
-    const res = await fetch("http://localhost:5000/watchlater", {
+    const res = await fetch(`${BACKEND_URL}${ENDPOINTS.WATCH_LATER}`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -140,7 +140,7 @@ export default function MovieModal({ selectedMovie, setSelectedMovie, reloadSave
   async function removeWatchLater() {
     const movieID = selectedMovie.id;
 
-    const res = await fetch("http://localhost:5000/removewatchlater", {
+    const res = await fetch(`${BACKEND_URL}${ENDPOINTS.REMOVE_WATCH_LATER}`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },
@@ -161,7 +161,7 @@ export default function MovieModal({ selectedMovie, setSelectedMovie, reloadSave
   async function getReviews() {
     const movieID = selectedMovie.id;
 
-    const res = await fetch(`http://localhost:5000/getreviews/${movieID}`, {
+    const res = await fetch(`${BACKEND_URL}${ENDPOINTS.GET_REVIEWS}/${movieID}`, {
       credentials: "include",
     });
 
