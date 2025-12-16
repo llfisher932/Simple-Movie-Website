@@ -27,8 +27,6 @@ export default function MovieModal({ selectedMovie, setSelectedMovie, reloadSave
       const data = await res.json();
 
       if (data.movies.some((m) => m.movie_id === selectedMovie.id)) setIsSaved(true);
-      console.log(isSaved);
-      console.log(data.movies);
     } catch (err) {
       console.error("Error Fetching Saved Movies: ", err);
     }
@@ -50,7 +48,6 @@ export default function MovieModal({ selectedMovie, setSelectedMovie, reloadSave
           credentials: "include",
         });
         const data = await res.json();
-        console.log("reviews =", data.reviews);
         if (res.ok) {
           let sum = 0;
           let counter = 0;
@@ -61,7 +58,6 @@ export default function MovieModal({ selectedMovie, setSelectedMovie, reloadSave
 
           const avg = counter > 0 ? sum / counter : 0;
           setStarRating(avg);
-          console.log(starRating);
         } else console.error(data.error);
       } catch (err) {
         console.error("Failed to fetch reviews:", err);

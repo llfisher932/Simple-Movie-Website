@@ -110,7 +110,7 @@ export default function MoviesPage({ swapPage, onLogout }) {
 
   return (
     <>
-      <div className="bg-gray-800 flex items-center justify-end w-full p-4">
+      <div className="bg-gray-800 flex items-center justify-end w-full p-2">
         <div className="flex-1">
           <button className="cursor-pointer text-white bg-amber-700 p-2 rounded-lg" onClick={handleLogout}>
             Logout
@@ -150,15 +150,9 @@ export default function MoviesPage({ swapPage, onLogout }) {
                   } justify-center items-center rounded-xl p-2 flex cursor-pointer text-white`}>
                   Popularity |
                   {popButtonAsc ? (
-                    <img
-                      className="w-3 h-3 ml-1"
-                      src="https://cdn-icons-png.flaticon.com/128/130/130906.png"
-                      alt="Up Arrow"></img>
+                    <img className="w-5 h-5 ml-1" src="../../assets/arrowup.svg" alt="Up Arrow"></img>
                   ) : (
-                    <img
-                      className="w-3 h-3 ml-1"
-                      src="https://cdn-icons-png.flaticon.com/128/318/318426.png"
-                      alt="Down Arrow"></img>
+                    <img className="w-5 h-5 ml-1" src="../../assets/arrowdown.svg" alt="Down Arrow"></img>
                   )}
                 </button>
                 <button
@@ -168,15 +162,9 @@ export default function MoviesPage({ swapPage, onLogout }) {
                   } justify-center items-center rounded-xl p-2 flex cursor-pointer text-white`}>
                   Release Date |
                   {dateButtonAsc ? (
-                    <img
-                      className="w-3 h-3 ml-1"
-                      src="https://cdn-icons-png.flaticon.com/128/130/130906.png"
-                      alt="Up Arrow"></img>
+                    <img className="w-5 h-5 ml-1" src="../../assets/arrowup.svg" alt="Up Arrow"></img>
                   ) : (
-                    <img
-                      className="w-3 h-3 ml-1"
-                      src="https://cdn-icons-png.flaticon.com/128/318/318426.png"
-                      alt="Down Arrow"></img>
+                    <img className="w-5 h-5 ml-1" src="../../assets/arrowdown.svg" alt="Down Arrow"></img>
                   )}
                 </button>
               </div>
