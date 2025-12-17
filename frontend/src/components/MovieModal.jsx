@@ -44,7 +44,6 @@ export default function MovieModal({ selectedMovie, setSelectedMovie, reloadSave
       try {
         const res = await fetch(`${BACKEND_URL}${ENDPOINTS.GET_REVIEWS}/${movieID}`, {
           //TODO REFACTOR WITH LOADREVIEWS BELOW
-          //get reviews based on movieID, not sensitive info or modifying so GET works
           credentials: "include",
         });
         const data = await res.json();

@@ -144,8 +144,7 @@ npm run dev
 
 - Some movies may not have posters.
 - Requires a TMDB API key.
-- Mobile UI needs to be updated for watch later button, currently broken.
-- Code for fetching and saving movies to watch later is messy and needs to be refactored.
+- Mobile UI needs to be updated for watch later button, currently broken. (Hamburger menu will be used)
 
 ## License
 
