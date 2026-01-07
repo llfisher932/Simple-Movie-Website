@@ -117,7 +117,7 @@ export default function MoviesPage({ swapPage, onLogout }) {
     <>
       <div className="bg-gray-800 flex items-center justify-end w-full p-2 h-14">
         <div className="flex-1 flex items-center justify-start">
-          <button onClick={hamburgerToggle}>
+          <button onClick={hamburgerToggle} className="cursor-pointer">
             {!hamburgerOpen ? (
               <img className="w-8 h-8" src="../../assets/menu.svg" alt="Menu Button"></img>
             ) : (
@@ -132,9 +132,15 @@ export default function MoviesPage({ swapPage, onLogout }) {
             </button>
             <button
               type="button"
-              onClick={swapPage}
+              onClick={() => swapPage(false)}
               className="bg-amber-700 cursor-pointer text-white p-2  flex items-center justify-center w-full hover:bg-amber-900">
               View Saved Movies
+            </button>
+            <button
+              type="button"
+              onClick={() => swapPage(true)}
+              className="bg-amber-700 cursor-pointer text-white p-2  flex items-center justify-center w-full hover:bg-amber-900">
+              Search For Movies
             </button>
           </div>
         </div>

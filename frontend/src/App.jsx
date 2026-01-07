@@ -24,9 +24,9 @@ export default function App() {
 
   if (isLoggedIn)
     return showMovies ? (
-      <MoviesPage swapPage={() => setShowMovies(false)} onLogout={() => setIsLoggedIn(false)} />
+      <MoviesPage swapPage={setShowMovies} onLogout={() => setIsLoggedIn(false)} />
     ) : (
-      <SavedPage swapPage={() => setShowMovies(true)} />
+      <SavedPage swapPage={setShowMovies} />
     );
 
   return (

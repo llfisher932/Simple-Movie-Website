@@ -85,7 +85,7 @@ const SavedPage = ({ swapPage }) => {
     <>
       <div className="bg-gray-800 flex items-center justify-end w-full p-2 h-14">
         <div className="flex-1 flex items-center justify-start">
-          <button onClick={hamburgerToggle}>
+          <button onClick={hamburgerToggle} className="cursor-pointer">
             {!hamburgerOpen ? (
               <img className="w-8 h-8" src="../../assets/menu.svg" alt="Menu Button"></img>
             ) : (
@@ -100,9 +100,15 @@ const SavedPage = ({ swapPage }) => {
             </button>
             <button
               type="button"
-              onClick={swapPage}
+              onClick={() => swapPage(false)}
               className="bg-amber-700 cursor-pointer text-white p-2  flex items-center justify-center w-full hover:bg-amber-900">
               View Saved Movies
+            </button>
+            <button
+              type="button"
+              onClick={() => swapPage(true)}
+              className="bg-amber-700 cursor-pointer text-white p-2  flex items-center justify-center w-full hover:bg-amber-900">
+              Search For Movies
             </button>
           </div>
         </div>
@@ -141,14 +147,7 @@ const SavedPage = ({ swapPage }) => {
       </div>
 
       <div className="flex-col fixed bottom-0  transform flex  z-50 bg-gray-800 w-full justify-center items-center p-2">
-        <div className="mx-auto flex items-center justify-center text-center">
-          <button
-            type="button"
-            onClick={swapPage}
-            className="bg-amber-700 cursor-pointer text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center ">
-            Search For Movies
-          </button>
-        </div>
+        <div className="mx-auto flex items-center justify-center text-center"></div>
       </div>
     </>
   );
