@@ -29,7 +29,10 @@ export default function RegisterPage({ onRegister }) {
 
   return (
     <div className="flex items-center justify-center bg-gray-900 text-white">
-      <form onSubmit={handleSubmit} className="bg-gray-800 p-6 rounded-lg w-80 space-y-4">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-gray-800 p-6 rounded-lg w-80 space-y-4"
+      >
         <h1 className="text-2xl font-bold">Register</h1>
 
         {error && <p className="text-red-500">{error}</p>}
@@ -57,7 +60,9 @@ export default function RegisterPage({ onRegister }) {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button className="w-full bg-amber-700 p-2 rounded">Create Account</button>
+        <button className="w-full bg-amber-700 p-2 rounded cursor-pointer">
+          Create Account
+        </button>
       </form>
     </div>
   );

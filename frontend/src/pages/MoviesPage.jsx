@@ -41,7 +41,7 @@ export default function MoviesPage({ swapPage, onLogout }) {
     } catch (err) {
       console.error("Error Fetching Movies: ", err);
     }
-  }, []); // Empty array = function never changes
+  }, []);
   function pageIncrease() {
     setPageNumber((prev) => prev + 1);
   }
@@ -119,32 +119,49 @@ export default function MoviesPage({ swapPage, onLogout }) {
         <div className="flex-1 flex items-center justify-start">
           <button onClick={hamburgerToggle} className="cursor-pointer">
             {!hamburgerOpen ? (
-              <img className="w-8 h-8" src="../../assets/menu.svg" alt="Menu Button"></img>
+              <img
+                className="w-8 h-8"
+                src="../../assets/menu.svg"
+                alt="Menu Button"
+              ></img>
             ) : (
-              <img className="w-8 h-8" src="../../assets/close.svg" alt="Menu Button"></img>
+              <img
+                className="w-8 h-8"
+                src="../../assets/close.svg"
+                alt="Menu Button"
+              ></img>
             )}
           </button>
-          <div className={`${hamburgerOpen ? "block" : "hidden"} fixed bg-amber-700 h-lvh left-0 top-14`}>
+
+          <div
+            className={`fixed left-0 top-14 h-lvh w-50 bg-amber-700 z-50 transform transition-transform duration-300 ease-in-out
+            ${hamburgerOpen ? "translate-x-0" : "-translate-x-full"}`}
+          >
             <button
-              className="cursor-pointer text-white bg-amber-700 p-2 hover:bg-amber-900 w-full"
-              onClick={handleLogout}>
+              className="active:scale-95 active:bg-amber-800 cursor-pointer text-white bg-amber-700 p-2 hover:bg-amber-900  w-full"
+              onClick={handleLogout}
+            >
               Logout
             </button>
             <button
               type="button"
               onClick={() => swapPage(false)}
-              className="bg-amber-700 cursor-pointer text-white p-2  flex items-center justify-center w-full hover:bg-amber-900">
+              className="active:scale-95 active:bg-amber-800 bg-amber-700 cursor-pointer text-white p-2  flex items-center justify-center w-full hover:bg-amber-900"
+            >
               View Saved Movies
             </button>
             <button
               type="button"
               onClick={() => swapPage(true)}
-              className="bg-amber-700 cursor-pointer text-white p-2  flex items-center justify-center w-full hover:bg-amber-900">
+              className="active:scale-95 active:bg-amber-800 bg-amber-700 cursor-pointer text-white p-2  flex items-center justify-center w-full hover:bg-amber-900"
+            >
               Search For Movies
             </button>
           </div>
         </div>
-        <h1 className="flex-1 text-center text-white font-bold hidden md:block text-3xl">Simple Movie Site</h1>
+        <h1 className="flex-1 text-center text-white font-bold hidden md:block text-3xl">
+          Simple Movie Site
+        </h1>
         <div className="flex-1 flex md:gap-4 gap-2 justify-end">
           <input
             id="searchBar"
@@ -158,7 +175,8 @@ export default function MoviesPage({ swapPage, onLogout }) {
             className="text-white cursor-pointer flex justify-center items-center text-center bg-amber-700 p-2 rounded-md"
             onClick={() => {
               searchButton(searchText);
-            }}>
+            }}
+          >
             Search
           </button>
         </div>
@@ -167,38 +185,66 @@ export default function MoviesPage({ swapPage, onLogout }) {
         <div className="w-1/6"></div>
         <div className="text-center flex justify-center items-center flex-col">
           {!movies ? (
-            <div className="mb-5 mt-5">There are currently no search results to display.</div>
+            <div className="mb-5 mt-5">
+              There are currently no search results to display.
+            </div>
           ) : (
             <>
               <div className="mt-3 flex gap-3">
                 <button
                   onClick={popButton}
                   className={`${
-                    activeButton === "popularity" ? "bg-amber-700" : "bg-gray-800"
-                  } justify-center items-center rounded-xl p-2 flex cursor-pointer text-white`}>
+                    activeButton === "popularity"
+                      ? "bg-amber-700"
+                      : "bg-gray-800"
+                  } justify-center items-center rounded-xl p-2 flex cursor-pointer text-white`}
+                >
                   Popularity |
                   {popButtonAsc ? (
-                    <img className="w-5 h-5 ml-1" src="../../assets/arrowup.svg" alt="Up Arrow"></img>
+                    <img
+                      className="w-5 h-5 ml-1"
+                      src="../../assets/arrowup.svg"
+                      alt="Up Arrow"
+                    ></img>
                   ) : (
-                    <img className="w-5 h-5 ml-1" src="../../assets/arrowdown.svg" alt="Down Arrow"></img>
+                    <img
+                      className="w-5 h-5 ml-1"
+                      src="../../assets/arrowdown.svg"
+                      alt="Down Arrow"
+                    ></img>
                   )}
                 </button>
                 <button
                   onClick={releaseDateButton}
                   className={`${
-                    activeButton === "releaseDate" ? "bg-amber-700" : "bg-gray-800"
-                  } justify-center items-center rounded-xl p-2 flex cursor-pointer text-white`}>
+                    activeButton === "releaseDate"
+                      ? "bg-amber-700"
+                      : "bg-gray-800"
+                  } justify-center items-center rounded-xl p-2 flex cursor-pointer text-white`}
+                >
                   Release Date |
                   {dateButtonAsc ? (
-                    <img className="w-5 h-5 ml-1" src="../../assets/arrowup.svg" alt="Up Arrow"></img>
+                    <img
+                      className="w-5 h-5 ml-1"
+                      src="../../assets/arrowup.svg"
+                      alt="Up Arrow"
+                    ></img>
                   ) : (
-                    <img className="w-5 h-5 ml-1" src="../../assets/arrowdown.svg" alt="Down Arrow"></img>
+                    <img
+                      className="w-5 h-5 ml-1"
+                      src="../../assets/arrowdown.svg"
+                      alt="Down Arrow"
+                    ></img>
                   )}
                 </button>
               </div>
               <div className="lg:min-w-4xl md:min-w-2xl md:max-w-5xl min-w-xs max-w-xs mx-auto cursor-pointer grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-1 box-border p-2">
                 {movies.map((movie) => (
-                  <MovieCard key={movie.id} movie={movie} fetchMovieDetailsModal={modalFetchPass} />
+                  <MovieCard
+                    key={movie.id}
+                    movie={movie}
+                    fetchMovieDetailsModal={modalFetchPass}
+                  />
                 ))}
               </div>
             </>
@@ -206,10 +252,20 @@ export default function MoviesPage({ swapPage, onLogout }) {
         </div>
 
         <div className="w-1/6"></div>
-        {selectedMovie && <MovieModal selectedMovie={selectedMovie} setSelectedMovie={setSelectedMovie} />}
+        {selectedMovie && (
+          <MovieModal
+            selectedMovie={selectedMovie}
+            setSelectedMovie={setSelectedMovie}
+          />
+        )}
         <div className="text-xs mb-15 text-center justify-center items-center flex flex-col">
-          This website uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise approved by TMDB.
-          <img src="../../assets/tmdb.svg" alt="TMDB image" className="w-24 p-4 flex" />
+          This website uses TMDB and the TMDB APIs but is not endorsed,
+          certified, or otherwise approved by TMDB.
+          <img
+            src="../../assets/tmdb.svg"
+            alt="TMDB image"
+            className="w-24 p-4 flex"
+          />
         </div>
       </div>
 
@@ -218,14 +274,16 @@ export default function MoviesPage({ swapPage, onLogout }) {
           <button
             type="button"
             onClick={pageDecrease}
-            className="bg-amber-700 cursor-pointer  text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center ">
+            className="bg-amber-700 cursor-pointer  text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center "
+          >
             Previous Page
           </button>
           <div className="absolute left-1/2 transform -translate-x-1/2"></div>
           <button
             type="button"
             onClick={pageIncrease}
-            className="bg-amber-700 cursor-pointer text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center ">
+            className="bg-amber-700 cursor-pointer text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center "
+          >
             Next Page
           </button>
         </div>

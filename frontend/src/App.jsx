@@ -24,9 +24,15 @@ export default function App() {
 
   if (isLoggedIn)
     return showMovies ? (
-      <MoviesPage swapPage={setShowMovies} onLogout={() => setIsLoggedIn(false)} />
+      <MoviesPage
+        swapPage={setShowMovies}
+        onLogout={() => setIsLoggedIn(false)}
+      />
     ) : (
-      <SavedPage swapPage={setShowMovies} />
+      <SavedPage
+        swapPage={setShowMovies}
+        onLogout={() => setIsLoggedIn(false)}
+      />
     );
 
   return (
@@ -41,11 +47,17 @@ export default function App() {
         </div>
         <div className="w-full text-center text-white flex justify-center items-center bg-gray-900 mb-">
           {showRegister ? (
-            <button className="text-white cursor-pointer" onClick={() => setShowRegister(false)}>
+            <button
+              className="text-white cursor-pointer"
+              onClick={() => setShowRegister(false)}
+            >
               Already have an account? Login
             </button>
           ) : (
-            <button className="text-white cursor-pointer" onClick={() => setShowRegister(true)}>
+            <button
+              className="text-white cursor-pointer"
+              onClick={() => setShowRegister(true)}
+            >
               Need an account? Register
             </button>
           )}
