@@ -19,6 +19,7 @@ export default function MoviesPage({ swapPage, onLogout }) {
   const [popButtonAsc, setPopButtonAsc] = useState(false);
   const [dateButtonAsc, setDateButtonAsc] = useState(false);
   const [activeButton, setActiveButton] = useState("");
+  const [hamburgerOpen, setHamburgerOpen] = useState(false);
 
   const fetchMovies = useCallback(async (query, pageNumber) => {
     try {
@@ -108,13 +109,34 @@ export default function MoviesPage({ swapPage, onLogout }) {
     fetchMovieDetailsModal(id, setSelectedMovie);
   }
 
+  function hamburgerToggle() {
+    setHamburgerOpen(!hamburgerOpen);
+  }
+
   return (
     <>
-      <div className="bg-gray-800 flex items-center justify-end w-full p-2">
-        <div className="flex-1">
-          <button className="cursor-pointer text-white bg-amber-700 p-2 rounded-lg" onClick={handleLogout}>
-            Logout
+      <div className="bg-gray-800 flex items-center justify-end w-full p-2 h-14">
+        <div className="flex-1 flex items-center justify-start">
+          <button onClick={hamburgerToggle}>
+            {!hamburgerOpen ? (
+              <img className="w-8 h-8" src="../../assets/menu.svg" alt="Menu Button"></img>
+            ) : (
+              <img className="w-8 h-8" src="../../assets/close.svg" alt="Menu Button"></img>
+            )}
           </button>
+          <div className={`${hamburgerOpen ? "block" : "hidden"} fixed bg-amber-700 h-lvh left-0 top-14`}>
+            <button
+              className="cursor-pointer text-white bg-amber-700 p-2 hover:bg-amber-900 w-full"
+              onClick={handleLogout}>
+              Logout
+            </button>
+            <button
+              type="button"
+              onClick={swapPage}
+              className="bg-amber-700 cursor-pointer text-white p-2  flex items-center justify-center w-full hover:bg-amber-900">
+              View Saved Movies
+            </button>
+          </div>
         </div>
         <h1 className="flex-1 text-center text-white font-bold hidden md:block text-3xl">Simple Movie Site</h1>
         <div className="flex-1 flex md:gap-4 gap-2 justify-end">
@@ -185,7 +207,7 @@ export default function MoviesPage({ swapPage, onLogout }) {
         </div>
       </div>
 
-      <div className="flex-col fixed bottom-0 left-1/2 transform -translate-x-1/2 flex  z-50 bg-gray-800 w-full justify-centeritems-center p-2">
+      <div className="flex-col fixed bottom-0 transform flex z-50 bg-gray-800 w-full justify-center items-center p-2">
         <div className="flex-row flex justify-between w-full gap-4">
           <button
             type="button"
@@ -193,14 +215,7 @@ export default function MoviesPage({ swapPage, onLogout }) {
             className="bg-amber-700 cursor-pointer  text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center ">
             Previous Page
           </button>
-          <div className="absolute left-1/2 transform -translate-x-1/2">
-            <button
-              type="button"
-              onClick={swapPage}
-              className="bg-amber-700 cursor-pointer text-white text-lg px-4 py-1.5 rounded-md flex items-center justify-center ">
-              View Saved Movies
-            </button>
-          </div>
+          <div className="absolute left-1/2 transform -translate-x-1/2"></div>
           <button
             type="button"
             onClick={pageIncrease}

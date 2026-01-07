@@ -13,11 +13,23 @@ const SavedPage = ({ swapPage }) => {
   const [movieIDs, setMovieIDs] = useState();
   const [movies, setMovies] = useState();
   const [selectedMovie, setSelectedMovie] = useState(null);
+  const [hamburgerOpen, setHamburgerOpen] = useState(false);
 
   function modalFetchPass(id) {
     fetchMovieDetailsModal(id, setSelectedMovie);
   }
+  function hamburgerToggle() {
+    setHamburgerOpen(!hamburgerOpen);
+  }
 
+  async function handleLogout() {
+    const res = await fetch(`${BACKEND_URL}${ENDPOINTS.LOGOUT}`, {
+      method: "POST",
+      credentials: "include",
+    });
+
+    onLogout();
+  }
   async function fetchMovieDetails(id) {
     try {
       const res = await fetch(`${BACKEND_URL}${ENDPOINTS.GET_DETAILS}`, {
@@ -71,10 +83,31 @@ const SavedPage = ({ swapPage }) => {
 
   return (
     <>
-      <div className="bg-gray-800 flex items-center justify-end w-full p-4">
-        <div className="flex-1"></div>
+      <div className="bg-gray-800 flex items-center justify-end w-full p-2 h-14">
+        <div className="flex-1 flex items-center justify-start">
+          <button onClick={hamburgerToggle}>
+            {!hamburgerOpen ? (
+              <img className="w-8 h-8" src="../../assets/menu.svg" alt="Menu Button"></img>
+            ) : (
+              <img className="w-8 h-8" src="../../assets/close.svg" alt="Menu Button"></img>
+            )}
+          </button>
+          <div className={`${hamburgerOpen ? "block" : "hidden"} fixed bg-amber-700 h-lvh left-0 top-14`}>
+            <button
+              className="cursor-pointer text-white bg-amber-700 p-2 hover:bg-amber-900 w-full"
+              onClick={handleLogout}>
+              Logout
+            </button>
+            <button
+              type="button"
+              onClick={swapPage}
+              className="bg-amber-700 cursor-pointer text-white p-2  flex items-center justify-center w-full hover:bg-amber-900">
+              View Saved Movies
+            </button>
+          </div>
+        </div>
         <h1 className="flex-1 text-center text-white font-bold block text-3xl">Saved movies</h1>
-        <div className="flex-1 flex md:gap-4 gap-2 justify-end"></div>
+        <div className="flex-1"></div>
       </div>
       <div className="flex box-border justify-center flex-col">
         <div className="w-1/6"></div>
@@ -107,7 +140,7 @@ const SavedPage = ({ swapPage }) => {
         </div>
       </div>
 
-      <div className="flex-col fixed bottom-0 left-1/2 transform -translate-x-1/2 flex  z-50 bg-gray-800 w-full justify-center items-center p-2">
+      <div className="flex-col fixed bottom-0  transform flex  z-50 bg-gray-800 w-full justify-center items-center p-2">
         <div className="mx-auto flex items-center justify-center text-center">
           <button
             type="button"
